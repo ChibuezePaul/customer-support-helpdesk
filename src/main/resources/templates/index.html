@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--<![endif]-->
+<head th:insert="layout :: head('Home')">
+
+</head>
+<body>
+    <div id="head" th:insert="layout :: header">
+
+    </div>
+    <section >
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 col-md-7 col-sm-7 alert alert-info">
+
+                    <h3 class=" text-center">Compose New Support Ticket</h3>
+                    <div class="hr-div"> <hr /></div>
+                    <form>
+
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label>Please Select Category</label>
+                            <select class="form-control" required="required">
+                                <option th:each="category : ${categories}" th:text="${category}">IT Support</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label>Please Select Priority</label>
+                            <select class="form-control">
+                                <option>Very High </option>
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label>Current Status</label>
+                            <select class="form-control" >
+                                <option th:each="status : ${statuses}" th:text="${status}">Open</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                            <label>Please Enter Email Address</label>
+                            <input type="email" class="form-control" required="required" placeholder="Enter Your Email Address" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                            <label>Please Select Location</label>
+                            <select class="form-control" required="required">
+                                <option th:each="location : ${locations}" th:text="${location}">First Floor</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label>Please Write a Subject Line</label>
+                            <input type="text" class="form-control" required="required" placeholder="Enter Subject Of Ticket" />
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label>Please Enter Issue</label>
+                            <textarea class="form-control" rows="10" required="required"></textarea>
+                        </div>
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <button type="submit" class="btn btn-primary">Compose & Send Ticket</button>
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="col-lg-1 col-md-1  col-sm-1">
+                </div>
+
+                <div class="col-lg-4 col-md-4  col-sm-4">
+
+                   <div class="alert alert-danger">
+                        <div class="media">
+                            <div class="pull-left">
+                                <img src="assets/img/admin.png" class="img-responsive" />
+                            </div>
+                            <div class="media-body">
+                                <h3 class="media-heading">User Account</h3>
+                                <p>
+                                    Log in to see all tickets status and also to confirm if the issue was rightly resolved.
+                                    Log in with your Staff email address.
+                                </p>
+                                <form>
+                                    <div class="form-group">
+                                        <input type="email" class="form-control" required="required" placeholder="Your Email" />
+                                    </div>
+                                    <div class="form-group">
+                                        <select class="form-control" required="required">
+                                            <option>Your Location</option>
+                                            <option th:each="location : ${locations}" th:text="${location}">First Floor</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" required="required" placeholder="Your Password" />
+                                    </div>
+                                    <div class="form-group">
+                                        <a href="user-dashboard.html" class="btn btn-success">Click To Login</a>
+                                    </div>
+                                    <a href="#">Forgot Password ?</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+    
+    <div id="footer" th:insert="layout :: footer">
+
+    </div>
+    <!--  Jquery Core Script -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <!--  Core Bootstrap Script -->
+    <script src="assets/js/bootstrap.js"></script>
+
+</body>
+</html>
