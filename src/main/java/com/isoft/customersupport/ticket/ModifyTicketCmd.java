@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 
 public class ModifyTicketCmd {
 	
-	@NotBlank
-	private Long id;
+	private Integer id;
 	
 	@Email @NotBlank
 	private String resolvedBy;
@@ -24,11 +23,11 @@ public class ModifyTicketCmd {
 //	private Set<String> comments;
 	
 	
-	public Long getId () {
+	public Integer getId () {
 		return id;
 	}
 	
-	public void setId ( Long id ) {
+	public void setId ( Integer id ) {
 		this.id = id;
 	}
 	

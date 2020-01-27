@@ -1,26 +1,12 @@
-﻿/*=============================================================
-    Authour URI: www.binarytheme.com
-    License: Commons Attribution 3.0
-
-    http://creativecommons.org/licenses/by/3.0/
-
-    100% Free To use For Personal And Commercial Use.
-    IN EXCHANGE JUST GIVE US CREDIT US AND TELL YOUR FRIENDS ABOUT US
-   
-    ========================================================  */
-
-
-/* =============================================================
-   GENERAL STYLES
- ============================================================ */
+﻿ /*GENERAL STYLES*/
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Nova Flat';
+    /*font-family: 'Open Sans', sans-serif;*/
     line-height: 30px;
       background:url('../img/geometry.png');
 }
 h2,h3,h4{
      font-family: 'Nova Flat';
-    
 }
 
 .noti-div h4{
@@ -40,11 +26,9 @@ section {
     max-width: 270px;
 }
 
-/* =============================================================
-   HEADER STYLES
- ============================================================ */
+   /*HEADER STYLES*/
 #head {
-    padding:30px;
+    padding:10px;
     background:url('../img/binding_dark.png');
     color:#fff;
 }
@@ -55,38 +39,34 @@ section {
 #head .header-mid {
     max-height:65px;
 }
- 
+
 #head h4 {
-    font-size:15px;
+    /*font-size:13px;*/
     font-weight:500;
 }
-/* =============================================================
-   MAIN SECTION STYLES
- ============================================================ */
+
+   /*MAIN SECTION STYLES*/
 #main h3 {
     color:#000;
-    padding:0px 0px 10px 0px;
+    padding:10px 0px 10px 0px;
     line-height: 40px;
 }
 #main .hr-div hr{
     padding-bottom:30px;
-   
+
 }
 .logout-link {
     margin-bottom:40px!important;
 }
-    /* =============================================================
-   FOOTER STYLES
- ============================================================ */
 
+   /*FOOTER STYLES*/
 #footer {
-    padding:30px;
+    padding:10px;
      background:url('../img/binding_dark.png');
     color:#fff;
-    margin-top:30px;
 }
 #footer h4{
-     font-size:15px;
+     font-size:12px;
     font-weight:500;
 }
     #footer h3 {

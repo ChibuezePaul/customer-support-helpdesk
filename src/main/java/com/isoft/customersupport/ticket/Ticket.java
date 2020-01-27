@@ -1,11 +1,15 @@
 package com.isoft.customersupport.ticket;
 
+import com.isoft.customersupport.location.CustomerLocation;
+import com.isoft.customersupport.ticket.category.Category;
 import org.hibernate.envers.Audited;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Audited @Entity
 public class Ticket {
@@ -13,26 +17,34 @@ public class Ticket {
 	@Id @GeneratedValue (strategy = GenerationType.AUTO)
 	Long id;
 	
-	@Email @NotNull
-	private String createdBy, resolvedBy;
+	@NotNull @Email (flags = Pattern.Flag.CASE_INSENSITIVE)
+	private String createdBy;
 	
-//	@Email @NotNull
-//	private String resolvedBy;
+	@Email (flags = Pattern.Flag.CASE_INSENSITIVE)
+	private String resolvedBy;
+	
+	@Email (flags = Pattern.Flag.CASE_INSENSITIVE)
+	private String copyEmail;
+	
+	private String phoneNumber;
 	
 	@NotNull
-	private LocalDateTime createdOn, resolvedOn;
+	private LocalDateTime createdOn;
+
+	private LocalDateTime resolvedOn;
 	
 	@NotNull
-	private String status, category, subject, issue, comments;
+	private String status, issue;
 	
+	@NotNull
+	private Category ticketCategory;
+
 //	@NotNull
-//	private String category;
+	@Embedded
+	private CustomerLocation customerLocation;
 	
-//	@NotNull
-//	private String subject;
-	
-//	@NotNull
-//	private String issue;
+	@ManyToMany
+	private Set<Comments> comments;
 	
 	public Long getId () {
 		return id;
@@ -66,22 +78,6 @@ public class Ticket {
 		this.status = status;
 	}
 	
-	public String getCategory () {
-		return category;
-	}
-	
-	public void setCategory ( String category ) {
-		this.category = category;
-	}
-	
-	public String getSubject () {
-		return subject;
-	}
-	
-	public void setSubject ( String subject ) {
-		this.subject = subject;
-	}
-	
 	public String getIssue () {
 		return issue;
 	}
@@ -106,27 +102,61 @@ public class Ticket {
 		this.resolvedOn = resolvedOn;
 	}
 	
-	public String getComments () {
+	public Set<Comments> getComments () {
 		return comments;
 	}
 	
-	public void setComments ( String comments ) {
+	public void setComments ( Set<Comments> comments ) {
 		this.comments = comments;
+	}
+	
+	public Category getTicketCategory () {
+		return ticketCategory;
+	}
+	
+	public void setTicketCategory ( Category ticketCategory ) {
+		this.ticketCategory = ticketCategory;
+	}
+	
+	public CustomerLocation getCustomerLocation () {
+		return customerLocation;
+	}
+	
+	public void setCustomerLocation ( CustomerLocation customerLocation ) {
+		this.customerLocation = customerLocation;
+	}
+	
+	public String getCopyEmail () {
+		return copyEmail;
+	}
+	
+	public void setCopyEmail ( String copyEmail ) {
+		this.copyEmail = copyEmail;
+	}
+	
+	public String getPhoneNumber () {
+		return phoneNumber;
+	}
+	
+	public void setPhoneNumber ( String phoneNumber ) {
+		this.phoneNumber = phoneNumber;
 	}
 	
 	@Override
 	public String toString () {
 		return "Ticket{" +
 			  "id=" + id +
-			  ", createdBy='" + createdBy + '\'' +
-			  ", resolvedBy='" + resolvedBy + '\'' +
+			  ", createdBy=" + createdBy +
+			  ", resolvedBy=" + resolvedBy +
+			  ", copyEmail='" + copyEmail + '\'' +
+			  ", phoneNumber='" + phoneNumber + '\'' +
 			  ", createdOn=" + createdOn +
 			  ", resolvedOn=" + resolvedOn +
 			  ", status='" + status + '\'' +
-			  ", category='" + category + '\'' +
-			  ", subject='" + subject + '\'' +
 			  ", issue='" + issue + '\'' +
-			  ", comments='" + comments + '\'' +
+			  ", ticketCategory=" + ticketCategory +
+			  ", customerLocation=" + customerLocation +
+			  ", comments=" + comments +
 			  '}';
 	}
 	
@@ -138,17 +168,20 @@ public class Ticket {
 		return Objects.equals ( id , ticket.id ) &&
 			  Objects.equals ( createdBy , ticket.createdBy ) &&
 			  Objects.equals ( resolvedBy , ticket.resolvedBy ) &&
+			  Objects.equals ( copyEmail , ticket.copyEmail ) &&
+			  Objects.equals ( phoneNumber , ticket.phoneNumber ) &&
 			  Objects.equals ( createdOn , ticket.createdOn ) &&
 			  Objects.equals ( resolvedOn , ticket.resolvedOn ) &&
 			  Objects.equals ( status , ticket.status ) &&
-			  Objects.equals ( category , ticket.category ) &&
-			  Objects.equals ( subject , ticket.subject ) &&
 			  Objects.equals ( issue , ticket.issue ) &&
+			  Objects.equals ( ticketCategory , ticket.ticketCategory ) &&
+			  Objects.equals ( customerLocation , ticket.customerLocation ) &&
 			  Objects.equals ( comments , ticket.comments );
 	}
 	
 	@Override
 	public int hashCode () {
-		return Objects.hash ( id , createdBy , resolvedBy , createdOn , resolvedOn , status , category , subject , issue , comments );
+		return Objects.hash ( id , createdBy , resolvedBy , copyEmail , phoneNumber , createdOn , resolvedOn , status
+			  , issue , ticketCategory , customerLocation , comments );
 	}
 }

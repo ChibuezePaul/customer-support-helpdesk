@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout :: head('Error')">
+</head>
+<body th:insert="layout :: header">
+    <div id="head" th:insert="layout :: header"></div>
+
+    <section id="main" class="page-error"
+             th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+        <div class="error-page">
+            <div class="error-content">
+                <!--<h2><i class="ti-face-sad"></i></h2> ${httpStatus.reasonPhrase}  -->
+                <h3><small th:text="${error}">Oops! Page not found.</small></h3>
+            </div>
+            <!-- /.error-content -->
+        </div>
+        <!-- /.error-page -->
+    </section>
+
+    <div id="footer" th:insert="layout :: footer"></div>
+</body>
+</html>

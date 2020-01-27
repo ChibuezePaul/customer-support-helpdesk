@@ -13,22 +13,21 @@ import java.util.Objects;
 
 @Audited @Entity
 public class User {
-	@Id
-	@GeneratedValue ( strategy = GenerationType.AUTO )
-	private Long id;
 	
-	@Email(flags = Pattern.Flag.CASE_INSENSITIVE)
-  	@NotNull
+	@Id @GeneratedValue ( strategy = GenerationType.IDENTITY )
+	private Integer id;
+	
+	@Email(flags = Pattern.Flag.CASE_INSENSITIVE) @NotNull
 	private String email;
 	
 	@NotNull
 	private String password;
 	
-	public Long getId () {
+	public Integer getId () {
 		return id;
 	}
 	
-	public void setId ( Long id ) {
+	public void setId ( Integer id ) {
 		this.id = id;
 	}
 	
