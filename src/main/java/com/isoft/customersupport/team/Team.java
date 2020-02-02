@@ -1,25 +1,25 @@
 package com.isoft.customersupport.team;
 
-import com.isoft.customersupport.user.User;
+import com.isoft.customersupport.AbstractEntity;
+import com.isoft.customersupport.usermngt.ActiveDirectory;
+import com.isoft.customersupport.usermngt.User;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.Set;
 
 @Entity @Audited
-public class Team {
-	@Id @GeneratedValue ( strategy = GenerationType.IDENTITY ) @NotNull
-	private Integer id;
+public class Team extends AbstractEntity {
 	
-	@Email (flags = Pattern.Flag.CASE_INSENSITIVE) @NotNull @ManyToOne
+	@NotBlank @Column(unique = true)
+	private String name;
+	
+	@ManyToOne(cascade= CascadeType.MERGE)//@@NotBlank Email (flags = Pattern.Flag.CASE_INSENSITIVE)
 	private User supervisor;
 	
-	@NotBlank @ManyToMany
-	private Set<User> members;
+	@ManyToMany //@NotBlank
+	private Set< ActiveDirectory > members;
 	
 	public Integer getId () {
 		return id;
@@ -37,11 +37,19 @@ public class Team {
 		this.supervisor = supervisor;
 	}
 	
-	public Set< User > getMembers () {
+	public Set< ActiveDirectory > getMembers () {
 		return members;
 	}
 	
-	public void setMembers ( Set< User > members ) {
+	public void setMembers ( Set< ActiveDirectory > members ) {
 		this.members = members;
+	}
+	
+	public String getName () {
+		return name;
+	}
+	
+	public void setName ( String name ) {
+		this.name = name;
 	}
 }

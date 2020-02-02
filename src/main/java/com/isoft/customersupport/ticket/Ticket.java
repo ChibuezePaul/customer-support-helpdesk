@@ -1,23 +1,21 @@
 package com.isoft.customersupport.ticket;
 
+import com.isoft.customersupport.AbstractEntity;
 import com.isoft.customersupport.location.CustomerLocation;
 import com.isoft.customersupport.ticket.category.Category;
 import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
 @Audited @Entity
-public class Ticket {
+public class Ticket extends AbstractEntity {
 	
-	@Id @GeneratedValue (strategy = GenerationType.AUTO)
-	Long id;
-	
-	@NotNull @Email (flags = Pattern.Flag.CASE_INSENSITIVE)
 	private String createdBy;
 	
 	@Email (flags = Pattern.Flag.CASE_INSENSITIVE)
@@ -28,29 +26,32 @@ public class Ticket {
 	
 	private String phoneNumber;
 	
-	@NotNull
 	private LocalDateTime createdOn;
 
 	private LocalDateTime resolvedOn;
 	
-	@NotNull
-	private String status, issue;
+	@NotBlank
+	private String issue, ticketType, ticketStatus, subject;
 	
-	@NotNull
+  	@Enumerated(EnumType.STRING)
+	private TicketPriority priority;
+	
+	@ManyToOne(cascade=CascadeType.ALL)
+//	@JoinColumn(name="updated_by", referencedColumnName = "id")
 	private Category ticketCategory;
 
-//	@NotNull
-	@Embedded
+	@ManyToOne(cascade=CascadeType.ALL)
+//	@JoinColumn(name="updated_by", referencedColumnName = "id")
 	private CustomerLocation customerLocation;
 	
 	@ManyToMany
 	private Set<Comments> comments;
 	
-	public Long getId () {
+	public Integer getId () {
 		return id;
 	}
 	
-	public void setId ( Long id ) {
+	public void setId ( Integer	 id ) {
 		this.id = id;
 	}
 	
@@ -68,14 +69,6 @@ public class Ticket {
 	
 	public void setCreatedOn ( LocalDateTime createdOn ) {
 		this.createdOn = createdOn;
-	}
-	
-	public String getStatus () {
-		return status;
-	}
-	
-	public void setStatus ( String status ) {
-		this.status = status;
 	}
 	
 	public String getIssue () {
@@ -142,22 +135,54 @@ public class Ticket {
 		this.phoneNumber = phoneNumber;
 	}
 	
+	public TicketPriority getPriority () {
+		return priority;
+	}
+	
+	public void setPriority ( TicketPriority priority ) {
+		this.priority = priority;
+	}
+	
+	public String getTicketType () {
+		return ticketType;
+	}
+	
+	public void setTicketType ( String ticketType ) {
+		this.ticketType = ticketType;
+	}
+	
+	public String getTicketStatus () {
+		return ticketStatus;
+	}
+	
+	public void setTicketStatus ( String ticketStatus ) {
+		this.ticketStatus = ticketStatus;
+	}
+	
+	public String getSubject () {
+		return subject;
+	}
+	
+	public void setSubject ( String subject ) {
+		this.subject = subject;
+	}
+	
 	@Override
 	public String toString () {
 		return "Ticket{" +
-			  "id=" + id +
-			  ", createdBy=" + createdBy +
-			  ", resolvedBy=" + resolvedBy +
+			  "createdBy='" + createdBy + '\'' +
+			  ", resolvedBy='" + resolvedBy + '\'' +
 			  ", copyEmail='" + copyEmail + '\'' +
 			  ", phoneNumber='" + phoneNumber + '\'' +
 			  ", createdOn=" + createdOn +
 			  ", resolvedOn=" + resolvedOn +
-			  ", status='" + status + '\'' +
 			  ", issue='" + issue + '\'' +
+			  ", priority='" + priority + '\'' +
 			  ", ticketCategory=" + ticketCategory +
 			  ", customerLocation=" + customerLocation +
 			  ", comments=" + comments +
-			  '}';
+			  ", id=" + id +
+			  "} " + super.toString ();
 	}
 	
 	@Override
@@ -165,15 +190,14 @@ public class Ticket {
 		if ( this == o ) return true;
 		if ( o == null || getClass () != o.getClass () ) return false;
 		Ticket ticket = ( Ticket ) o;
-		return Objects.equals ( id , ticket.id ) &&
-			  Objects.equals ( createdBy , ticket.createdBy ) &&
+		return Objects.equals ( createdBy , ticket.createdBy ) &&
 			  Objects.equals ( resolvedBy , ticket.resolvedBy ) &&
 			  Objects.equals ( copyEmail , ticket.copyEmail ) &&
 			  Objects.equals ( phoneNumber , ticket.phoneNumber ) &&
 			  Objects.equals ( createdOn , ticket.createdOn ) &&
 			  Objects.equals ( resolvedOn , ticket.resolvedOn ) &&
-			  Objects.equals ( status , ticket.status ) &&
 			  Objects.equals ( issue , ticket.issue ) &&
+			  Objects.equals ( priority , ticket.priority ) &&
 			  Objects.equals ( ticketCategory , ticket.ticketCategory ) &&
 			  Objects.equals ( customerLocation , ticket.customerLocation ) &&
 			  Objects.equals ( comments , ticket.comments );
@@ -181,7 +205,7 @@ public class Ticket {
 	
 	@Override
 	public int hashCode () {
-		return Objects.hash ( id , createdBy , resolvedBy , copyEmail , phoneNumber , createdOn , resolvedOn , status
-			  , issue , ticketCategory , customerLocation , comments );
+		return Objects.hash ( createdBy , resolvedBy , copyEmail , phoneNumber , createdOn , resolvedOn ,
+			  issue , priority , ticketCategory , customerLocation , comments );
 	}
 }

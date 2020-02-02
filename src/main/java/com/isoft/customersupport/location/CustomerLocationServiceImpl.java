@@ -9,8 +9,11 @@ import java.util.List;
 @Service
 public class CustomerLocationServiceImpl implements CustomerLocationService {
 	
+	private final CustomerLocationRepository locationRepository;
+	
 	@Autowired
-	CustomerLocationRepository locationRepository;
+	public CustomerLocationServiceImpl ( CustomerLocationRepository locationRepository ) {this.locationRepository =
+		  locationRepository;}
 	
 	@Override
 	public CustomerLocation createCustomerLocation ( CustomerLocation location ) {
@@ -25,6 +28,7 @@ public class CustomerLocationServiceImpl implements CustomerLocationService {
 	
 	@Override
 	public List< CustomerLocation > findAllCustomerLocation () {
+//		locationRepository.findAll ().forEach ( a -> System.out.println (a.getCustomerCountry ().replaceAll ( "","" )) );
 		return locationRepository.findAll ();
 	}
 }

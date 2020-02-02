@@ -51,9 +51,29 @@
             </div>
         </div>
     </div>
-    <section style="padding:100px 0px 0px 0px;">
 
-    </section>
+    <div class="col-lg-3 col-md-3 col-sm-3" th:fragment="sidebar">
+        <a th:href="@{/logout}" class=" label label-danger"><strong>LOGOUT</strong> </a>
+        <span th:text="${'Welcome ' + #authentication.name.replaceAll('(@.*)','').toUpperCase()}" class=" label label-success text-right"><strong>Welcome FOO</strong> </span>
+        <div class="list-group">
+            <a href="#" class="list-group-item active">Quick Links
+            </a>
+
+            <a th:href="@{/}" class="list-group-item">My Dashboard</a>
+            <a th:href="@{/open-tickets}" class="list-group-item">Open Tickets</a>
+            <!--<a href="notifications.html" class="list-group-item">Admin Notifications</a>-->
+            <a th:href="@{/all-tickets}" class="list-group-item">All Tickets</a>
+            <a sec:authorize="hasAnyRole('SU, ADMIN')" th:href="@{/new-ticket-category}" class="list-group-item">Add New Ticket Class</a>
+            <a sec:authorize="hasAnyRole('SU, ADMIN')" th:href="@{/new-team}" class="list-group-item">Add New Support Team</a>
+            <a sec:authorize="hasRole('SU')" th:href="@{/new-location}" class="list-group-item">Add New Office Location</a>
+            <a sec:authorize="hasRole('SU')" th:href="@{/new-admin}" class="list-group-item">Create Supervisor</a>
+            <!--<a sec:authorize="hasAnyRole('SU, ADMIN')" th:href="@{/change-password}" class="list-group-item">Change Password</a>-->
+        </div>
+        <!--<div class="alert alert-success text-center">-->
+        <!--<h3>The Notice Board</h3>-->
+        <!--No Notice Found !-->
+        <!--</div>-->
+    </div>
     
     <div id="footer" th:fragment="footer">
         <div class="container">

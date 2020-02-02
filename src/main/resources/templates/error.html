@@ -1,10 +1,15 @@
 <!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:insert="layout :: head('Error')">
-</head>
+
+<head th:insert="layout :: head('Error')"></head>
 <body th:insert="layout :: header">
     <div id="head" th:insert="layout :: header"></div>
 
+    <h2>Error Page!</h2>
     <section id="main" class="page-error"
              th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
         <div class="error-page">
@@ -18,5 +23,10 @@
     </section>
 
     <div id="footer" th:insert="layout :: footer"></div>
+
+    <!--  Jquery Core Script -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <!--  Core Bootstrap Script -->
+    <script src="assets/js/bootstrap.js"></script>
 </body>
 </html>

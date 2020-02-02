@@ -1,21 +1,18 @@
 package com.isoft.customersupport.location;
 
+import com.isoft.customersupport.AbstractEntity;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity @Audited
-@Embeddable
-public class CustomerLocation {
+public class CustomerLocation extends AbstractEntity {
 	
-	@NotNull @Id @GeneratedValue ( strategy = GenerationType.IDENTITY )
-	private Integer id;
-	
-	@NotBlank
-	private String customerBranch, customerCity, customerCountry;
+//	@NotBlank
+	private String customerBranch;
+	private String customerCity, customerCountry;
 	
 	public Integer getId () {
 		return id;

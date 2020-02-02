@@ -1,17 +1,19 @@
 package com.isoft.customersupport.usermngt;
 
-import javax.persistence.*;
+import com.isoft.customersupport.AbstractEntity;
+import org.hibernate.envers.Audited;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
-@Entity
-public class ActiveDirectory {
+@Entity @Audited
+public class ActiveDirectory extends AbstractEntity {
 	
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	
-	@NotNull @Email
+	@Column(unique = true) @NotNull @Email(flags = Pattern.Flag.CASE_INSENSITIVE)
 	private String email;
 	
 	@NotNull @NotBlank

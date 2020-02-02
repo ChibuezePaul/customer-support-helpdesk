@@ -19,9 +19,8 @@ public class CategoryServiceImpl implements CategoryService {
 		if(category == null) throw new ArithmeticException ();
 		
 		Category newCategory = new Category ();
-		newCategory.setTicketType ( category.getTicketType () );
 		newCategory.setTicketClass ( category.getTicketClass () );
-		newCategory.setAssignee ( assignTeamByTicketClass ( newCategory.getTicketClass () ) );
+		newCategory.setAssignee ( category.getAssignee () );
 		return categoryRepository.save ( newCategory );
 	}
 	
@@ -30,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return categoryRepository.findAll ();
 	}
 	
-	private Team assignTeamByTicketClass(String ticketClass){
+	public Team assignTicketToTeamByTicketClass (String ticketClass){
 		Map<String, Team> teamMap = new HashMap<> (  );
 		findAllCategory ().forEach ( c -> teamMap.put ( c.getTicketClass (), c.getAssignee () ));
 		return teamMap.get ( ticketClass );

@@ -3,11 +3,9 @@
 <!--[if IE 7 ]><html class="ie ie7" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
 <!--[if IE 8 ]><html class="ie ie8" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
-<head th:insert="layout :: head('Home')">
-
-</head>
+<head th:insert="layout :: head('Home')"></head>
 <body>
     <div id="head" th:insert="layout :: header"></div>
     <section id="main">
@@ -19,12 +17,15 @@
 
                 <div class="col-lg-6 col-md-6 col-sm-6 ">
                     <section id="login-container" class="content-form rounded-6 main" style="min-height: 520px;">
-                        <!--<div class="login-form">-->
-                            <div id="login-form">
+                        <!--Login Form Division-->
+                            <div th:unless="${isPasswordChange}" id="login-form">
                                 <h2 class="heading">Login to the support portal</h2>
-                                <div id="invalid" th:if="${param.error}" th:text="${'Invalid Login Credentials'}" th:class="${'alert alert-danger text-danger'}"></div>
+                                <div id="invalid" th:if="${param.error}" th:text="${'Invalid Login Credentials'}" th:class="${'alert alert-danger text-danger'}">
+                                    <input type="button" class="close" value="×" data-dismiss="alert">
+                                </div>
                                 <!--<p>Enter the details below</p>-->
                                 <form accept-charset="UTF-8" th:action="@{/login}" class="new_user_session"  method="post">
+
                                     <div class="alert alert-with-close notice" id="noticeajax" style="display:none;">
 
                                     </div>
@@ -32,41 +33,96 @@
                                     <fieldset>
                                         <div class="control-group">
                                             <div class="controls form-group">
-                                                <input class="required special form-control" name="username" autofocus="true" placeholder="Your e-mail address" size="30" type="email" autocomplete="off">
+                                                <input class="required special form-control" name="username" autofocus="true" placeholder="E-mail Address" size="30" type="email" autocomplete="off" required>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <div class="controls form-group">
-                                                <input class="special form-control" name="password" placeholder="Password" size="30" type="password" autocomplete="off">
+                                                <input class="special form-control" name="password" placeholder="Password" size="30" type="password" autocomplete="off" required>
                                             </div>
                                         </div>
                                         <div class="control-group">
                                             <div class="controls">
                                                 <button type="submit" class="btn btn-warning btn-login"> Login </button>
                                             </div>
-                                            <a href="" data-toggle-dom="#forgot-form, #login-form" id="forgot_password">Forgot your password?</a>
+                                            <!--<a href="" data-toggle-dom="#forgot-form, #login-form" id="forgot_password">Forgot your password?</a>-->
                                         </div>
                                     </fieldset>
                                 </form>
                             </div>
-                            <div id="forgot-form" class="hide">
-                                <h2 class="heading">Forgot Password</h2>
-                                <p>Give us your email address and instructions to reset your password will be emailed to you.</p>
-                                <form accept-charset="UTF-8" action="/password_resets" method="post" rel="validate" novalidate="novalidate">
+
+                            <!--Password Change Division-->
+                            <div th:if="${isPasswordChange}" class=>
+                                <h3 class="text-center">New User! Change Password!</h3>
+                                <!--<div class="hr-div"> <hr /></div>-->
+                                <form th:action="@{/save-password}" th:method="post" th:object="${password}">
+                                    <span th:class="${#fields.hasErrors('*')}  ? 'text-danger' : 'hidden'">
+                                    <li th:each="e : ${#fields.detailedErrors()}" th:attr="field=${e.fieldName}"
+                                        th:text="${e.message}"></li>
+                                    </span>
+                                    <!--<div class="row">-->
+                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
                                     <fieldset>
                                         <div class="control-group">
-                                            <div class="controls">
-                                                <input class="required special" id="email" name="email" placeholder="Your e-mail address" type="text" value="" aria-required="true">
+                                            <div class="controls form-group">
+                                                <label>Email Address</label>
+                                                <input type="text" autocomplete="off" class="form-control" required="required" th:field="*{email}">
                                             </div>
                                         </div>
-                                        <br>
+
+                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="row">-->
+                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
+                                        <div class="control-group">
+                                            <div class="controls form-group">
+                                                <label>Old Password</label>
+                                                <input type="password" autocomplete="off" class="form-control" required="required" th:field="*{oldPassword}">
+                                            </div>
+                                        </div>
+
+                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="row">-->
+                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
+                                        <div class="control-group">
+                                            <div class="controls form-group">
+                                                <label>New Password</label>
+                                                <input type="password" autocomplete="off" class="form-control" required="required" th:field="*{password}">
+                                            </div>
+                                        </div>
+
+                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
+                                    <!--</div>-->
+                                        <div class="control-group">
+                                            <div class="controls">
+                                                <button type="submit" class="btn btn-primary">Change Password</button>
+                                            </div>
+                                        </div>
+
                                     </fieldset>
-                                    <div class="control-group">
-                                        <button type="button" data-toggle-dom="#login-form, #forgot-form" class="btn"> Cancel </button>
-                                        <button type="submit" class="btn btn-primary pull-right"> Reset my password </button>
-                                    </div>
                                 </form>
                             </div>
+                            <!--<div id="forgot-form" class="hide">-->
+                                <!--<h2 class="heading">Forgot Password</h2>-->
+                                <!--<p>Give us your email address and instructions to reset your password will be emailed to you.</p>-->
+                                <!--<form accept-charset="UTF-8" action="/password_resets" method="post" rel="validate" novalidate="novalidate">-->
+                                    <!--<fieldset>-->
+                                        <!--<div class="control-group">-->
+                                            <!--<div class="controls">-->
+                                                <!--<input class="required special" id="email" name="email" placeholder="Your e-mail address" type="text" value="" aria-required="true">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                        <!--<br>-->
+                                    <!--</fieldset>-->
+                                    <!--<div class="control-group">-->
+                                        <!--<button type="button" data-toggle-dom="#login-form, #forgot-form" class="btn"> Cancel </button>-->
+                                        <!--<button type="submit" class="btn btn-primary pull-right"> Reset my password </button>-->
+                                    <!--</div>-->
+                                <!--</form>-->
+                            <!--</div>-->
 
 
 
