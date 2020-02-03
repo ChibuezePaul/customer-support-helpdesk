@@ -107,6 +107,10 @@
             <artifactId>hibernate-envers</artifactId>
             <version>5.3.12.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

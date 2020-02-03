@@ -15,10 +15,10 @@ public class Team extends AbstractEntity {
 	@NotBlank @Column(unique = true)
 	private String name;
 	
-	@ManyToOne(cascade= CascadeType.MERGE)//@@NotBlank Email (flags = Pattern.Flag.CASE_INSENSITIVE)
+	@ManyToOne
 	private User supervisor;
 	
-	@ManyToMany //@NotBlank
+	@ManyToMany
 	private Set< ActiveDirectory > members;
 	
 	public Integer getId () {

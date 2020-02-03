@@ -4,7 +4,6 @@ import com.isoft.customersupport.AbstractEntity;
 import com.isoft.customersupport.location.CustomerLocation;
 import com.isoft.customersupport.ticket.category.Category;
 import org.hibernate.envers.Audited;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -44,7 +43,7 @@ public class Ticket extends AbstractEntity {
 //	@JoinColumn(name="updated_by", referencedColumnName = "id")
 	private CustomerLocation customerLocation;
 	
-	@ManyToMany
+	@ManyToMany(cascade=CascadeType.ALL)
 	private Set<Comments> comments;
 	
 	public Integer getId () {

@@ -1,6 +1,7 @@
 package com.isoft.customersupport.ticket;
 
 import com.isoft.customersupport.AbstractEntity;
+import com.isoft.customersupport.usermngt.ActiveDirectory;
 import com.isoft.customersupport.usermngt.User;
 import org.hibernate.envers.Audited;
 
@@ -8,17 +9,19 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity @Audited
 public class Comments extends AbstractEntity {
 	
-//	@NotNull
 	private LocalDateTime createdOn;
 	
 	@ManyToMany(cascade= CascadeType.ALL)
-	private Set<User> createdBy;
+	private List< ActiveDirectory > createdBy;
+	
+	String details;
 	
 	public Integer getId () {
 		return id;
@@ -36,12 +39,20 @@ public class Comments extends AbstractEntity {
 		this.createdOn = createdOn;
 	}
 	
-	public Set< User > getCreatedBy () {
+	public List< ActiveDirectory > getCreatedBy () {
 		return createdBy;
 	}
 	
-	public void setCreatedBy ( Set< User > createdBy ) {
+	public void setCreatedBy ( List< ActiveDirectory > createdBy ) {
 		this.createdBy = createdBy;
+	}
+	
+	public String getDetails () {
+		return details;
+	}
+	
+	public void setDetails ( String details ) {
+		this.details = details;
 	}
 	
 	@Override
