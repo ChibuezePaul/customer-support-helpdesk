@@ -89,7 +89,7 @@
                                 <li th:each="e : ${#fields.detailedErrors()}" th:attr="field=${e.fieldName}"
                                     th:text="${e.message}"></li>
                             </section>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                 <label>Ticket Type</label>
                                 <select class="form-control" required="required" th:field="*{ticketType}">
                                     <option value="">select type...</option>
@@ -98,16 +98,8 @@
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                <label>Ticket Class</label>
-                                <select class="form-control" required="required" th:field="*{ticketCategory.assignee.id}">
-                                    <option value="">select class...</option>
-                                    <option th:each="class : ${classes}" th:text="${class.ticketClass}" th:value="${class.id}">IT Support</option>
-                                    <!--<option th:each="category : ${categories}" th:text="${category.ticketClass}" th:value="${category.ticketClass}">IT Support</option>-->
-                                    <!--<option value="Other">Other</option>-->
-                                </select>
-                            </div>
-                            <div class="form-group col-lg-2 col-md-2 col-sm-2">
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                 <label>Severity Level</label>
                                 <select class="form-control" th:field="*{priority}">
                                     <option value="LOW">Low </option>
@@ -115,47 +107,58 @@
                                     <option value="HIGH">High</option>
                                 </select>
                             </div>
-                            <div class="form-group col-lg-2 col-md-2 col-sm-2">
-                                <label>Current Status</label>
-                                <select class="form-control" th:field="*{ticketStatus}">
-                                    <option th:each="status : ${statuses}" th:text="${status}" th:value="${status}">Open</option>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                                <label>Ticket Class</label>
+                                <select class="form-control" required="required" th:field="*{ticketCategory}">
+                                    <option value="">select class...</option>
+                                    <option th:each="category : ${categories}" th:text="${category.ticketClass}" th:value="${category.id}">IT Support</option>
+                                    <!--<option th:each="category : ${categories}" th:text="${category.ticketClass}" th:value="${category.ticketClass}">IT Support</option>-->
+                                    <!--<option value="Other">Other</option>-->
+                                </select>
+                            </div>
+                            <!--<div class="form-group col-lg-2 col-md-2 col-sm-2">-->
+                                <!--<label>Current Status</label>-->
+                                <!--<select class="form-control" th:field="*{ticketStatus}">-->
                                     <!--<option th:each="status : ${statuses}" th:text="${status}" th:value="${status}">Open</option>-->
-                                </select>
-                            </div>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                                    <!--&lt;!&ndash;<option th:each="status : ${statuses}" th:text="${status}" th:value="${status}">Open</option>&ndash;&gt;-->
+                                <!--</select>-->
+                            <!--</div>-->
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                 <label>Select Your Branch</label>
-                                <select class="form-control" required="required" th:field="*{customerLocation.customerBranch}">
+                                <select class="form-control" required="required" th:field="*{customerLocation}">
                                     <option value="">select branch...</option>
-                                    <option th:each="customerLocation : ${customerLocations}" th:text="${customerLocation.customerBranch}" th:value="${customerLocation.customerBranch}">Head Office</option>
+                                    <option th:each="location : ${locations}" th:text="${location.customerBranch}" th:value="${location.customerBranch}">Head Office</option>
                                 </select>
                             </div>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                <label>Select Your City</label>
-                                <select class="form-control" required="required" th:field="*{customerLocation.customerCity}">
-                                    <option value="">select city...</option>
-                                    <option th:each="customerLocation : ${customerLocations}" th:text="${customerLocation.customerCity}" th:value="${customerLocation.customerCity}">Lagos</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                <label>Select Your Country</label>
-                                <select class="form-control" required="required" th:field="*{customerLocation.customerCountry}">
-                                    <option value="">select country...</option>
-                                    <option th:each="customerLocation : ${customerLocations}" th:text="${customerLocation.customerCountry}" th:value="${customerLocation.customerCountry}">Nigeria</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <!--<div class="form-group col-lg-4 col-md-4 col-sm-4">-->
+                                <!--<label>Select Your City</label>-->
+                                <!--<select class="form-control" required="required" th:field="*{customerLocation}">-->
+                                    <!--<option value="">select city...</option>-->
+                                    <!--<option th:each="location : ${locations}" th:text="${location.customerCity}" th:value="${location.customerCity}">Lagos</option>-->
+                                <!--</select>-->
+                            <!--</div>-->
+                            <!--<div class="form-group col-lg-4 col-md-4 col-sm-4">-->
+                                <!--<label>Select Your Country</label>-->
+                                <!--<select class="form-control" required="required" th:field="*{customerLocation}">-->
+                                    <!--<option value="">select country...</option>-->
+                                    <!--<option th:each="location : ${locations}" th:text="${location.customerCountry}" th:value="${location.customerCountry}">Nigeria</option>-->
+                                <!--</select>-->
+                            <!--</div>-->
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                 <label>Enter Your Phone Number</label>
                                 <input type="number" autocomplete="off" class="form-control" th:field="*{phoneNumber}">
                             </div>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                 <label>Enter Copy Email Address</label>
                                 <input type="email" autocomplete="off" class="form-control" th:field="*{copyEmail}">
                             </div>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                 <label>Upload Screenshot</label>
                                 <input type="file" autocomplete="off" class="form-control">
                             </div>
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                 <label>Enter Issue Subject</label>
                                 <input type="text" required autocomplete="off" class="form-control" th:field="*{subject}">
                             </div>
@@ -164,8 +167,8 @@
                                 <textarea class="form-control" rows="10" required autocomplete="off" th:field="*{issue}"></textarea>
                             </div>
 
-                            <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                <button type="submit" class="btn btn-primary pull-right">Compose & Send Ticket</button>
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4" style="padding-bottom: 0">
+                                <button type="submit" class="btn btn-primary pull-right">Send Ticket</button>
                             </div>
                         </form>
                     </div>

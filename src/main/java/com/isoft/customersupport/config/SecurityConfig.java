@@ -69,20 +69,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Bean
     public JavaMailSender getMailSender() {
-//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("isoft.code.io@gmail.com");
-//        mailSender.setUsername(env.getProperty ("spring.mail.username"));
-//        mailSender.setPassword(env.getProperty ("spring.mail.password"));
-        mailSender.setPassword("iamisoftcode.io");
+//        mailSender.setUsername("isoft.code.io@gmail.com");
+        mailSender.setUsername(env.getProperty ("spring.mail.username"));
+        mailSender.setPassword(env.getProperty ("spring.mail.password"));
+//        mailSender.setPassword("iamisoftcode.io");
 
         Properties props = mailSender.getJavaMailProperties();
-//        Properties props = new Properties (  );
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.port", "587");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
 //
@@ -92,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 return new PasswordAuthentication ("isoft.code.io@gmail.com","iamisoftcode.io" );
             }
         } );
-        mailSender.setSession ( session );//setJavaMailProperties ( props );
+        mailSender.setSession ( session );
         return mailSender;
     }
    

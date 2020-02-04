@@ -9,6 +9,7 @@ import com.isoft.customersupport.ticket.Ticket;
 import com.isoft.customersupport.ticket.TicketService;
 import com.isoft.customersupport.ticket.category.Category;
 import com.isoft.customersupport.ticket.category.CategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
-@Controller
+@Controller @Slf4j
 public class UserController {
 	
 	@Value("${ticket.type}")
@@ -34,7 +35,6 @@ public class UserController {
 	@Value("${ticket.status}")
 	public String [] ticketStatus;
 	
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final CustomerLocationService customerLocationService;
 	private final CategoryService categoryService;
 	private final TeamService teamService;
@@ -71,7 +71,7 @@ public class UserController {
 	@PostMapping("/save-ticket")
 	public String createTicket(@ModelAttribute ("ticket") @Valid Ticket cmd, BindingResult result, RedirectAttributes redirectAttributes, Model model){
 		if (result.hasErrors()) {
-			logger.warn("Error occurred creating Ticket {}", result);
+			log.warn("Error occurred creating Ticket {}", result);
 			loadTicketAttributes ( model );
 			model.addAttribute("isIndex",true);
 			return "index";
@@ -122,7 +122,7 @@ public class UserController {
 	@PostMapping ("/save-ticket-category")
 	public String saveNewTicketClass(@ModelAttribute ("ticketCategory") @Valid Category cmd, BindingResult result, RedirectAttributes redirectAttributes, Model model){
 		if (result.hasErrors()) {
-			logger.warn("Error occurred creating Category {}", result);
+			log.warn("Error occurred creating Category {}", result);
 			model.addAttribute("isNewTicketCategory",true);
 			return "index";
 		}
@@ -141,7 +141,7 @@ public class UserController {
 	@PostMapping ("/save-team")
 	public String saveNewTeam(@ModelAttribute ("team") @Valid Team cmd, BindingResult result, RedirectAttributes redirectAttributes, Model model){
 		if (result.hasErrors()) {
-			logger.warn("Error occurred creating Team {}", result);
+			log.warn("Error occurred creating Team {}", result);
 			model.addAttribute("isNewSupportTeam",true);
 			return "index";
 		}
@@ -160,7 +160,7 @@ public class UserController {
 	@PostMapping ("/save-location")
 	public String saveNewLocation(@ModelAttribute ("location") @Valid CustomerLocation cmd, BindingResult result, RedirectAttributes redirectAttributes, Model model){
 		if (result.hasErrors()) {
-			logger.warn("Error occurred creating Team {}", result);
+			log.warn("Error occurred creating Team {}", result);
 			model.addAttribute("isNewLocation",true);
 			return "index";
 		}
@@ -182,7 +182,7 @@ public class UserController {
 			result.addError ( new ObjectError ( "email","Admin with email " +cmd.getEmail () +" already exists" ) );
 		
 		if (result.hasGlobalErrors () || result.hasFieldErrors ( "email" )) {
-			logger.warn("Error occurred creating Admin {}", result);
+			log.warn("Error occurred creating Admin {}", result);
 			model.addAttribute("isNewAdminUser",true);
 			return "index";
 		}
@@ -206,7 +206,7 @@ public class UserController {
 		}
 		
 		if (result.hasErrors()) {
-			logger.warn("Error occurred changing password {}", result);
+			log.warn("Error occurred changing password {}", result);
 			model.addAttribute("isPasswordChange",true);
 			return "login";
 		}
@@ -231,10 +231,10 @@ public class UserController {
 	
 	public void loadTicketAttributes ( Model model ) {
 		model.addAttribute ( "types", ticketType );
-		model.addAttribute ( "classes", categoryService.findAllCategory () );
-		model.addAttribute ( "statuses", ticketStatus );
+//		model.addAttribute ( "classes", categoryService.findAllCategory () );
+//		model.addAttribute ( "statuses", ticketStatus );
 		model.addAttribute ( "categories", categoryService.findAllCategory () );
-		model.addAttribute ( "customerLocations", customerLocationService.findAllCustomerLocation () );
+		model.addAttribute ( "locations", customerLocationService.findAllCustomerLocation () );
 	}
 	
 	@ModelAttribute("openTicketCount")

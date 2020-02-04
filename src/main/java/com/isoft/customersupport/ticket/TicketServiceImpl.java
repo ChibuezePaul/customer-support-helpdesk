@@ -4,15 +4,13 @@ import com.isoft.customersupport.config.TicketMailService;
 import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.exception.TicketNotFoundException;
 import com.isoft.customersupport.exception.ValidationException;
-import com.isoft.customersupport.location.CustomerLocation;
 import com.isoft.customersupport.location.CustomerLocationRepository;
 import com.isoft.customersupport.team.Team;
-import com.isoft.customersupport.ticket.category.Category;
 import com.isoft.customersupport.ticket.category.CategoryRepository;
-import com.isoft.customersupport.ticket.category.CategoryService;
 import com.isoft.customersupport.ticket.category.CategoryServiceImpl;
 import com.isoft.customersupport.usermngt.ActiveDirectory;
 import com.isoft.customersupport.usermngt.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Service
+@Service @Slf4j
 public class TicketServiceImpl implements TicketService {
 	
 	private final TicketRepository ticketRepository;
@@ -46,29 +44,21 @@ public class TicketServiceImpl implements TicketService {
 	public Ticket createTicket ( Ticket ticketCmd ) {
 		if(ticketCmd == null) throw new ValidationException ();
 		Ticket newTicket = new Ticket ();
-		newTicket.setCreatedBy ( Util.getCurrentUser ().getEmail () );
+		newTicket.setUpdatedBy ( Util.getCurrentUser ().getEmail () );
 		newTicket.setCreatedOn ( LocalDateTime.now () );
 		newTicket.setSubject ( ticketCmd.getSubject () );
 		newTicket.setIssue ( ticketCmd.getIssue () );
 		newTicket.setCopyEmail ( ticketCmd.getCopyEmail () );
 		newTicket.setPhoneNumber ( ticketCmd.getPhoneNumber () );
 		newTicket.setPriority ( ticketCmd.getPriority () );
-//		CustomerLocation customerLocation = new CustomerLocation ();
-//		customerLocation.setCustomerCountry ( ticketCmd.getCustomerLocation ().getCustomerCountry () );
-//		customerLocation.setCustomerCity ( ticketCmd.getCustomerLocation ().getCustomerCity () );
-//		customerLocation.setCustomerBranch ( ticketCmd.getCustomerLocation ().getCustomerBranch () );
-//		locationRepository.save(customerLocation);
-		newTicket.setTicketStatus ( ticketCmd.getTicketStatus () );
+		newTicket.setTicketStatus ( TicketFlag.OPEN );
 		newTicket.setTicketType ( ticketCmd.getTicketType () );
+		log.info ( "location {}, category {}",ticketCmd.getCustomerLocation ().toString (), ticketCmd.getTicketCategory ().toString () );
 		newTicket.setCustomerLocation ( ticketCmd.getCustomerLocation () );
-//		Category ticketCategory = new Category ();
-//		ticketCategory.setTicketClass ( ticketCmd.getTicketCategory ().getTicketClass () );
-//		ticketCategory.setAssignee ( ticketCmd.getTicketCategory ().getAssignee () );
-//		categoryRepository.save(ticketCategory);
 		newTicket.setTicketCategory ( ticketCmd.getTicketCategory () );
 		ticketRepository.save(newTicket);
-//		Team assignedTeam = categoryService.assignTicketToTeamByTicketClass(ticketCmd.getTicketCategory ().getAssignee ());
-//		sendTicketMail(newTicket, newTicket.getTicketCategory().getAssignee ().getSupervisor (), newTicket.getTicketCategory().getAssignee ());
+		log.info ( "ticket {}",newTicket.toString () );
+		sendTicketMail(newTicket, newTicket.getTicketCategory().getAssignee ().getSupervisor (), newTicket.getTicketCategory().getAssignee ());
 		return newTicket;
 	}
 	
@@ -100,7 +90,8 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Override
 	public List< Ticket > findAllOpenTicket () {
-		return ticketRepository.findTicketByTicketStatus("Open");
+		log.info ( ticketRepository.findAll ().toString () );
+		return ticketRepository.findTicketByTicketStatus(TicketFlag.OPEN);
 	}
 	
 	@Override

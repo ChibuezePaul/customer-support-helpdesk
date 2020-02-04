@@ -29,7 +29,7 @@ public class CustomerSupportApplication implements InitializingBean {
 	private final CategoryRepository categoryRepository;
 	private final PasswordEncoder encoder;
 	
-	@Value ( "${do.test.data}" )
+	@Value ( "${init.test.data}" )
 	public boolean shouldInitializeTestData;
 	private static Logger logger  = LoggerFactory.getLogger ( CustomerSupportApplication.class );
 	

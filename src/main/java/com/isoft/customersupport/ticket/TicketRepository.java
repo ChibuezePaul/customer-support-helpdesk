@@ -11,6 +11,6 @@ import java.util.Set;
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 	Optional<Ticket> findTicketByCreatedBy(String email);
 	Optional<Ticket> findTicketByResolvedBy(String email);
-	List< Ticket> findTicketByTicketStatus (String satus);
+	List< Ticket> findTicketByTicketStatus (TicketFlag flag);
 	Set< Ticket> findTicketByCommentsIsNull ();
 }

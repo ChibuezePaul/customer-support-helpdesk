@@ -8,6 +8,7 @@ import org.hibernate.envers.Audited;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -18,10 +19,11 @@ public class Comments extends AbstractEntity {
 	
 	private LocalDateTime createdOn;
 	
-	@ManyToMany(cascade= CascadeType.ALL)
+	@ManyToMany
 	private List< ActiveDirectory > createdBy;
 	
-	String details;
+	@NotBlank
+	private String details;
 	
 	public Integer getId () {
 		return id;
@@ -59,7 +61,7 @@ public class Comments extends AbstractEntity {
 	public String toString () {
 		return "Comments{" +
 			  "createdOn=" + createdOn +
-			  ", createdBy=" + createdBy +
+			  ", updatedBy=" + createdBy +
 			  "} " + super.toString ();
 	}
 	

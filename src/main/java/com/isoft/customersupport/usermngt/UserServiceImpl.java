@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 //		newUser.setOldPassword ( encoder.encode ( tempPassword ) );
 		newUser.setRole ( Roles.ADMIN );
 //		ticketMailService.sendNewUserCreatedMessage ( "Supervisor Account Created", "Username : "+ newUser.getEmail () + "\nPassword : "+tempPassword , newUser.getEmail () );
-		ticketMailService.sendTicketMessageWithAttachment ( null, "Supervisor Account Created","Username : "+ newUser.getEmail () + "\nPassword : "+tempPassword, newUser.getEmail (),newUser.getEmail (),newUser.getEmail ());
+		ticketMailService.sendTicketMessageWithAttachment ( null, "Supervisor Account Created","Username : "+ newUser.getEmail () + "<br />Password : "+tempPassword, newUser.getEmail (),newUser.getEmail (),newUser.getEmail ());
 		return userRepository.save ( newUser );
 	}
 	
