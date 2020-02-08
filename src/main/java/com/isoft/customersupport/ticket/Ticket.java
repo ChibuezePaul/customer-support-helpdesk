@@ -2,11 +2,12 @@ package com.isoft.customersupport.ticket;
 
 import com.isoft.customersupport.AbstractEntity;
 import com.isoft.customersupport.location.CustomerLocation;
-import com.isoft.customersupport.team.Team;
 import com.isoft.customersupport.ticket.category.Category;
+import com.isoft.customersupport.ticket.comments.Comments;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +20,9 @@ public class Ticket extends AbstractEntity {
 	
 	@Email(flags = Pattern.Flag.CASE_INSENSITIVE)
 	private String updatedBy;
+	
+	@Email(flags = Pattern.Flag.CASE_INSENSITIVE)
+	private String createdBy;
 	
 	@Email (flags = Pattern.Flag.CASE_INSENSITIVE)
 	private String resolvedBy;
@@ -48,5 +52,8 @@ public class Ticket extends AbstractEntity {
 	private CustomerLocation customerLocation;
 	
 	@ManyToMany
-	private Set<Comments> comments;
+	private Set< Comments > comments;
+	
+	@Lob
+	private String attachmentName;
 }

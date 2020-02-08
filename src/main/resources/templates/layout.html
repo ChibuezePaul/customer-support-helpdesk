@@ -15,11 +15,11 @@
         <![endif]-->
     <title th:text="|Support Help Desk : ${currentPage}|">Support Help Desk : Admin</title>
     <!-- BOOTSTRAP CORE STYLE CSS -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <link th:href="@{/assets/css/bootstrap.css}" rel="stylesheet" />
     <!-- FONT AWESOME CSS -->
-    <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link th:href="@{/assets/css/font-awesome.min.css}" rel="stylesheet" />
     <!-- CUSTOM STYLE CSS -->
-    <link href="assets/css/style.css" rel="stylesheet" />
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet" />
     <!-- Google	Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Nova+Flat' rel='stylesheet' type='text/css' />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css' />
@@ -36,16 +36,14 @@
 
                 <div class="col-lg-4 col-md-4 col-sm-4 ">
                     <a th:href="@{/}">
-                        <img src="assets/img/support.png"  />
-                        <img src="assets/img/logo.png"  />
+                        <img th:src="@{/assets/img/support.png}"  />
+                        <img th:src="@{/assets/img/logo.png}"  />
                         </a>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4 text-center" >
-                     <!--<img src="assets/img/top-mouse.png "  class="header-mid" />-->
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4">
                     <h3>Kemm Technologies Limited</h3>
-                    <!--<h4><span>E-mail:</span> info@Kemmtech.com</h4>-->
                 </div>
                 
             </div>
@@ -61,7 +59,7 @@
 
             <a th:href="@{/}" class="list-group-item">My Dashboard</a>
             <a th:href="@{/open-tickets}" class="list-group-item">Open Tickets</a>
-            <!--<a href="notifications.html" class="list-group-item">Admin Notifications</a>-->
+            <a th:href="@{/seen-tickets}" class="list-group-item">Seen Ticket</a>
             <a th:href="@{/all-tickets}" class="list-group-item">All Tickets</a>
             <a sec:authorize="hasAnyRole('SU, ADMIN')" th:href="@{/new-ticket-category}" class="list-group-item">Add New Ticket Class</a>
             <a sec:authorize="hasAnyRole('SU, ADMIN')" th:href="@{/new-team}" class="list-group-item">Add New Support Team</a>
@@ -69,10 +67,6 @@
             <a sec:authorize="hasRole('SU')" th:href="@{/new-admin}" class="list-group-item">Create Supervisor</a>
             <!--<a sec:authorize="hasAnyRole('SU, ADMIN')" th:href="@{/change-password}" class="list-group-item">Change Password</a>-->
         </div>
-        <!--<div class="alert alert-success text-center">-->
-        <!--<h3>The Notice Board</h3>-->
-        <!--No Notice Found !-->
-        <!--</div>-->
     </div>
     
     <div id="footer" th:fragment="footer">
@@ -99,9 +93,9 @@
         </div>
     </div>
     <!--  Jquery Core Script -->
-    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script th:src="@{/assets/js/jquery-1.10.2.js}"></script>
     <!--  Core Bootstrap Script -->
-    <script src="assets/js/bootstrap.js"></script>
+    <script th:src="@{/assets/js/bootstrap.js}"></script>
 
 </body>
 </html>

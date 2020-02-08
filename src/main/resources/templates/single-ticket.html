@@ -1,125 +1,75 @@
 ﻿<!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en" xmlns:th="http://www.thymeleaf.org"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en" xmlns:th="http://www.thymeleaf.org" > <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en" xmlns:th="http://www.thymeleaf.org" > <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
-<head th:insert="layout :: head('Single Ticket')"></head>
+<head th:insert="layout :: head('Single Ticket')">
+
+</head>
 <body>
     <div id="head" th:insert="layout :: header"></div>
-
     <section id="main" >
         <div class="container" >
             <div class="row">
                 <div class="col-lg-9 col-md-9 col-sm-9">
-                 
-                       <h3>Ticket ID  <span class="label label-danger">#109</span> 
-                        Status <span class="label label-info">Closed</span> 
-                       Priority <span class="label label-warning">High</span>
-                        Category <span class="label label-success">Template Support</span>
-                   </h3>
-                                          
-                      <h3>Subject <span class="label label-default">Template Dummy Subject Line</span></h3> 
-                     <div class="hr-div"> <hr /></div>
-                    
-                        <div class="panel panel-default">
-  <div class="panel-heading"><strong class="label label-warning">By Admin</strong><span class="label label-danger pull-right">Dated: 10/07/2014</span> </div>
-  <div class="panel-body">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                       Nulla pretium lectus vel justo iaculis blandit.
-                       Nulla facilisi. In hac habitasse platea dictumst.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      <strong>
-                       Nulla pretium lectus vel justo iaculis blandit.
-                       Nulla facilisi. In hac habitasse platea dictumst.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </strong>
-                       Nulla pretium lectus vel justo iaculis blandit.
-                       Nulla facilisi. In hac habitasse platea dictumst.
-  </div>
-</div>  
-                       <div class="panel panel-default">
-  <div class="panel-heading"><strong class="label label-info">By You</strong><span class="label label-success pull-right">Dated: 9/07/2014</span> </div>
-  <div class="panel-body">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                       Nulla pretium lectus vel justo iaculis blandit.
-                       Nulla facilisi. In hac habitasse platea dictumst.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      <strong>
-                       Nulla pretium lectus vel justo iaculis blandit.
-                       Nulla facilisi. In hac habitasse platea dictumst.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </strong>
-      <ul>
-          <li>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </li>
-            <li>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </li>
-            <li>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </li>
-      </ul>
-                       Nulla pretium lectus vel justo iaculis blandit.
-                       Nulla facilisi. In hac habitasse platea dictumst.
-  </div>
-</div>
-                      <div class="panel panel-default">
-  <div class="panel-heading"><strong class="label label-success">By Admin</strong><span class="label label-danger pull-right">Dated: 8/07/2014</span> </div>
-  <div class="panel-body">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                       Nulla pretium lectus vel justo iaculis blandit.
-                       Nulla facilisi. In hac habitasse platea dictumst.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    
-  </div>
-</div>  
-                       <div class="panel panel-default">
-  <div class="panel-heading"><strong class="label label-danger">By You</strong><span class="label label-warning pull-right">Dated: 7/07/2014</span> </div>
-  <div class="panel-body">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                       Nulla pretium lectus vel justo iaculis blandit.
-      <hr  />
-                       Nulla facilisi. In hac habitasse platea dictumst.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      <strong>
-                       Nulla pretium lectus vel justo iaculis blandit.
-                       Nulla facilisi. In hac habitasse platea dictumst.
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      </strong>
-      <ul>
-        
-            <li>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </li>
-            <li>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </li>
-      </ul>
-  </div>
-</div>  
-                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>Make New Reply</label>
-                            <textarea class="form-control" rows="8"></textarea>
+                    <h3>Ticket ID  <span class="label label-danger" th:text="${'#'+singleTicket.id}">#109</span>
+                        Status <span class="label label-info" th:text="${singleTicket.ticketStatus}">Closed</span>
+                        Priority <span class="label label-warning" th:text="${singleTicket.priority}">High</span>
+                        Category <span class="label label-success" th:text="${singleTicket.ticketCategory.assignee.name}">Template Support</span>
+                    </h3>
+
+                    <h3>Subject <span class="label label-default" th:text="${singleTicket.subject}">Template Dummy Subject Line</span></h3>
+                    <h3>Issue <span class="label label-default" th:text="${singleTicket.issue}">Template Dummy Subject Line</span></h3>
+
+                    <h4 class="container text-success text-left" th:text="${message}">Success Message</h4>
+
+                    <div class="panel panel-default" th:each="comment : ${singleTicket.comments}">
+                        <div class="panel-heading"><strong class="label label-warning" th:text="${'By ' + comment.createdBy}">By Admin</strong><span class="label label-danger pull-right" th:text="${'Dated: ' + comment.createdOn.dayOfWeek + '/' + comment.createdOn.month + '/' + comment.createdOn.year}">Dated: 10/07/2014</span> </div>
+                        <div class="panel-body"  >
+                            <strong th:text="${comment.details}">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Nulla pretium lectus vel justo iaculis blandit.
+                            Nulla facilisi. In hac habitasse platea dictumst.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            </strong>
+                        </div>
+                    </div>
+                    <form th:action="@{/save-comment/{ticketId}(ticketId=${singleTicket.id})}" th:method="post" th:object="${newComment}">
+                        <section th:class="${#fields.hasErrors('*')}  ? 'alert alert-danger text-danger' : 'hidden'">
+                            <li th:each="e : ${#fields.detailedErrors()}" th:attr="field=${e.fieldName}"
+                                th:text="${e.message}"></li>
+                        </section>
+                        <div class="form-group col-lg-8 col-md-8 col-sm-8">
+                            <label>Add Note</label>
+                            <textarea class="form-control" rows="8" required autocomplete="off" th:field="*{details}"></textarea>
+                        </div>
+
+                        <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                            <label>Update Status</label>
+                            <select class="form-control" name="status">
+                                <option value="">select status...</option>
+                                <option value="CLOSED">Closed</option>
+                                <option value="RESOLVED">Resolved</option>
+                                <option value="REJECTED">Rejected</option>
+                            </select>
                         </div>
 
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <button type="submit" class="btn btn-primary">Reply Ticket</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
-                     
-
+                    </form>
                 </div>
                 <div th:insert="layout :: sidebar"></div>
             </div>
         </div>
     </section>
-  <div id="footer" th:insert="layout :: footer"></div>
+    <div id="footer" th:insert="layout :: footer"></div>
     <!--  Jquery Core Script -->
-    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script th:src="@{/assets/js/jquery-1.10.2.js}"></script>
     <!--  Core Bootstrap Script -->
-    <script src="assets/js/bootstrap.js"></script>
+    <script th:src="@{/assets/js/bootstrap.js}"></script>
 
 </body>
 </html>

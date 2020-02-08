@@ -1,14 +1,19 @@
 package com.isoft.customersupport.usermngt;
 
+import com.isoft.customersupport.config.ApplicationException;
 import com.isoft.customersupport.config.Messages;
+import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.location.CustomerLocation;
 import com.isoft.customersupport.location.CustomerLocationService;
 import com.isoft.customersupport.team.Team;
 import com.isoft.customersupport.team.TeamService;
 import com.isoft.customersupport.ticket.Ticket;
+import com.isoft.customersupport.ticket.TicketFlag;
 import com.isoft.customersupport.ticket.TicketService;
 import com.isoft.customersupport.ticket.category.Category;
 import com.isoft.customersupport.ticket.category.CategoryService;
+import com.isoft.customersupport.ticket.comments.Comments;
+import com.isoft.customersupport.ticket.comments.CommentsService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +24,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -42,10 +47,11 @@ public class UserController {
 	private final UserService userService;
 	private final TicketService ticketService;
 	private final ActiveDirectoryRepo activeDirectoryRepo;
+	private final CommentsService commentService;
 	
 	
 	@Autowired
-	public UserController ( CustomerLocationService customerLocationService , CategoryService categoryService , TeamService teamService , Messages messages , UserService userService , TicketService ticketService, ActiveDirectoryRepo activeDirectoryRepo ) {
+	public UserController ( CustomerLocationService customerLocationService , CategoryService categoryService , TeamService teamService , Messages messages , UserService userService , TicketService ticketService, ActiveDirectoryRepo activeDirectoryRepo, CommentsService commentService ) {
 		this.customerLocationService = customerLocationService;
 		this.categoryService = categoryService;
 		this.teamService = teamService;
@@ -53,15 +59,16 @@ public class UserController {
 		this.userService = userService;
 		this.ticketService = ticketService;
 		this.activeDirectoryRepo = activeDirectoryRepo;
+		this.commentService = commentService;
 	}
 	
 	@GetMapping("/")
 	public String getIndexPage( Model model, RedirectAttributes redirectAttributes ){
-//		if(Util.getCurrentUser ().getIsFirstLogin () != null) {
-//			redirectAttributes.addFlashAttribute ( "password",new User ());
-//			redirectAttributes.addFlashAttribute ( "isPasswordChange",true );
-//			return "redirect:/login";
-//		}
+		if( userService.isFirstLogin ( Util.getCurrentUser () ) ) {
+			redirectAttributes.addFlashAttribute ( "password",new User ());
+			redirectAttributes.addFlashAttribute ( "isPasswordChange",true );
+			return "redirect:/login";
+		}
 		loadTicketAttributes ( model );
 		model.addAttribute ( "isIndex", true );
 		loadAllModelAttributes ( model );
@@ -69,14 +76,14 @@ public class UserController {
 	}
 	
 	@PostMapping("/save-ticket")
-	public String createTicket(@ModelAttribute ("ticket") @Valid Ticket cmd, BindingResult result, RedirectAttributes redirectAttributes, Model model){
+	public String createTicket(@RequestParam MultipartFile attachment, @ModelAttribute ("ticket") @Valid Ticket cmd, BindingResult result, RedirectAttributes redirectAttributes, Model model){
 		if (result.hasErrors()) {
 			log.warn("Error occurred creating Ticket {}", result);
 			loadTicketAttributes ( model );
 			model.addAttribute("isIndex",true);
 			return "index";
 		}
-		ticketService.createTicket ( cmd );
+		ticketService.createTicket ( cmd, attachment );
 		redirectAttributes.addFlashAttribute("message", messages.get("ticket.added.ok"));
 		return "redirect:/";
 	}
@@ -87,29 +94,46 @@ public class UserController {
 		return "login";
 	}
 	
-//	@GetMapping("/error")
-//	public String getErrorPage(){
-//		return "error";
-//	}
+//	@ExceptionHandler( ApplicationException.class )
+	@GetMapping("/error")
+	public String getErrorPage(){
+		return "error";
+	}
 	
 	@GetMapping("/open-tickets")
-	public String viewOpenTickets(){
+	public String viewOpenTickets(Model model){
+		model.addAttribute ( "openTickets",ticketService.findAllOpenTicket () );
 		return "open-tickets";
 	}
 	
-	@GetMapping("/unseen-tickets")
-	public String viewUnseenTickets(){
-		return "unseen-tickets";
+	@GetMapping("/seen-tickets")
+	public String viewSeenTickets(Model model){
+		model.addAttribute ( "seenTickets",ticketService.findAllSeenTicket () );
+		return "seen-tickets";
 	}
 	
 	@GetMapping("/all-tickets")
-	public String viewAllTickets(){
+	public String viewAllTickets(Model model){
+		model.addAttribute ( "allTickets",ticketService.findAllTicket () );
 		return "ticket-history";
 	}
 	
-	@GetMapping("/single-ticket")
-	public String viewSingleTicket(){
+	@GetMapping("/single-ticket/{id}")
+	public String viewSingleTicket(@PathVariable Integer id, Model model ){
+		model.addAttribute ( "singleTicket", ticketService.setTicketAsSeen(id));
+		model.addAttribute ( "newComment", new Comments () );
 		return "single-ticket";
+	}
+	
+	@PostMapping("/save-comment/{ticketId}")
+	public String addNewCommentToTicket(@ModelAttribute ("newComment") @Valid Comments cmd, BindingResult result, RedirectAttributes redirectAttributes, @PathVariable Integer ticketId, TicketFlag status){
+		if (result.hasErrors()) {
+			log.warn("Error occurred adding comment {}", result);
+			return "single-ticket";
+		}
+		commentService.createComment ( cmd, status, ticketId );
+		redirectAttributes.addFlashAttribute("message", messages.get("comment.add.ok"));
+		return "redirect:/single-ticket/"+ticketId;
 	}
 	
 	@GetMapping("/new-ticket-category")
@@ -192,12 +216,12 @@ public class UserController {
 	}
 	
 	
-//	@GetMapping("/change-password")
-//	public String changePassword(Model model){
-//		model.addAttribute ( "isChangePassword",true );
-//		loadAllModelAttributes ( model );
-//		return "index";
-//	}
+	@GetMapping("/change-password")
+	public String changePassword(Model model){
+		model.addAttribute ( "isChangePassword",true );
+		loadAllModelAttributes ( model );
+		return "index";
+	}
 	@PostMapping ("/save-password")
 	public String savePassword(@ModelAttribute ("password") @Valid User cmd, BindingResult result, RedirectAttributes redirectAttributes, Model model){
 		User user = userService.findUserByEmail (cmd.getEmail ());
@@ -231,8 +255,6 @@ public class UserController {
 	
 	public void loadTicketAttributes ( Model model ) {
 		model.addAttribute ( "types", ticketType );
-//		model.addAttribute ( "classes", categoryService.findAllCategory () );
-//		model.addAttribute ( "statuses", ticketStatus );
 		model.addAttribute ( "categories", categoryService.findAllCategory () );
 		model.addAttribute ( "locations", customerLocationService.findAllCustomerLocation () );
 	}
@@ -242,9 +264,9 @@ public class UserController {
 		return ticketService.findAllOpenTicket ().size ();
 	}
 	
-	@ModelAttribute("unseenTicketCount")
-	public int getUnseenTicketCount(){
-		return ticketService.findAllUnseenTicket ().size ();
+	@ModelAttribute("seenTicketCount")
+	public int getSeenTicketCount(){
+		return ticketService.findAllSeenTicket ().size ();
 	}
 	
 	@ModelAttribute("allTicketCount")

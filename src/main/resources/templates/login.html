@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en" xmlns:th="http://www.thymeleaf.org" > <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en" xmlns:th="http://www.thymeleaf.org" > <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en" xmlns:th="http://www.thymeleaf.org" > <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
@@ -54,14 +54,12 @@
                             <!--Password Change Division-->
                             <div th:if="${isPasswordChange}" class=>
                                 <h3 class="text-center">New User! Change Password!</h3>
-                                <!--<div class="hr-div"> <hr /></div>-->
                                 <form th:action="@{/save-password}" th:method="post" th:object="${password}">
                                     <span th:class="${#fields.hasErrors('*')}  ? 'text-danger' : 'hidden'">
                                     <li th:each="e : ${#fields.detailedErrors()}" th:attr="field=${e.fieldName}"
                                         th:text="${e.message}"></li>
                                     </span>
-                                    <!--<div class="row">-->
-                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
+
                                     <fieldset>
                                         <div class="control-group">
                                             <div class="controls form-group">
@@ -70,11 +68,6 @@
                                             </div>
                                         </div>
 
-                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
-                                    <!--</div>-->
-
-                                    <!--<div class="row">-->
-                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
                                         <div class="control-group">
                                             <div class="controls form-group">
                                                 <label>Old Password</label>
@@ -82,11 +75,6 @@
                                             </div>
                                         </div>
 
-                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
-                                    <!--</div>-->
-
-                                    <!--<div class="row">-->
-                                        <!--<div class="form-group col-lg-4 col-md-4 col-sm-4"></div>-->
                                         <div class="control-group">
                                             <div class="controls form-group">
                                                 <label>New Password</label>
@@ -143,9 +131,9 @@
 
     <div id="footer" th:insert="layout :: footer"></div>
     <!--  Jquery Core Script -->
-    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script th:src="@{/assets/js/jquery-1.10.2.js}"></script>
     <!--  Core Bootstrap Script -->
-    <script src="assets/js/bootstrap.js"></script>
+    <script th:src="@{/assets/js/bootstrap.js}"></script>
 
 </body>
 </html>

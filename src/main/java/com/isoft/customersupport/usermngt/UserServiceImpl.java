@@ -14,14 +14,18 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 	
+	private final UserRepository userRepository;
+	public final SimpleMailMessage template;
+	private final TicketMailService ticketMailService;
+	private final PasswordEncoder encoder;
+	
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	public SimpleMailMessage template;
-	@Autowired
-	TicketMailService ticketMailService;
-	@Autowired
-	PasswordEncoder encoder;
+	public UserServiceImpl ( UserRepository userRepository , SimpleMailMessage template , TicketMailService ticketMailService , PasswordEncoder encoder ) {
+		this.userRepository = userRepository;
+		this.template = template;
+		this.ticketMailService = ticketMailService;
+		this.encoder = encoder;
+	}
 	
 	@Override
 	public User createUser ( User userCmd ) {
@@ -30,10 +34,8 @@ public class UserServiceImpl implements UserService {
 		newUser.setEmail ( userCmd.getEmail () );
 		String tempPassword = Util.generatePassword ();
 		newUser.setPassword ( encoder.encode ( tempPassword ) );
-//		newUser.setOldPassword ( encoder.encode ( tempPassword ) );
 		newUser.setRole ( Roles.ADMIN );
-//		ticketMailService.sendNewUserCreatedMessage ( "Supervisor Account Created", "Username : "+ newUser.getEmail () + "\nPassword : "+tempPassword , newUser.getEmail () );
-		ticketMailService.sendTicketMessageWithAttachment ( null, "Supervisor Account Created","Username : "+ newUser.getEmail () + "<br />Password : "+tempPassword, newUser.getEmail (),newUser.getEmail (),newUser.getEmail ());
+		ticketMailService.sendNewUserCreatedMessage ( "Supervisor Account Created", "Username : "+ newUser.getEmail () + "<br />Password : "+tempPassword , newUser.getEmail () );
 		return userRepository.save ( newUser );
 	}
 	
@@ -72,5 +74,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List< User > findAllUsers () {
 		return userRepository.findAll ();
+	}
+	
+	@Override
+	public boolean isFirstLogin ( String email ) {
+		 User adminUser = userRepository.findByEmail ( email );
+		 return adminUser == null ? false : adminUser.getIsFirstLogin ();
 	}
 }

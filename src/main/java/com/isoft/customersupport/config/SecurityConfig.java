@@ -24,11 +24,14 @@ import java.util.Properties;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
-    @Autowired
-    private Environment env;
+    private final Environment env;
+    private final UserDetailsServiceImpl customerUserDetailsService;
     
     @Autowired
-    private UserDetailsServiceImpl customerUserDetailsService;
+    public SecurityConfig ( Environment env , UserDetailsServiceImpl customerUserDetailsService ) {
+        this.env = env;
+        this.customerUserDetailsService = customerUserDetailsService;
+    }
     
     @Override
     protected void configure( AuthenticationManagerBuilder auth) throws Exception {
@@ -44,12 +47,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .requestMatchers ( PathRequest.toStaticResources ().atCommonLocations () ).permitAll ()
-                .antMatchers("/").authenticated ()
-                .antMatchers("/open-tickets").authenticated ()
-                .antMatchers("/all-tickets").authenticated ()
-                .antMatchers("/new***").authenticated ()
-                .antMatchers("/save***").authenticated ()
-                .antMatchers("/change-password").authenticated ()
+                .antMatchers("/h2console/**").permitAll()
+                .antMatchers("/error").permitAll()
+                .antMatchers("/").fullyAuthenticated ()
+                .antMatchers("/***-tickets").authenticated ()
+                .antMatchers("/single-***").authenticated ()
+                .antMatchers("/new-ticket-category","new-team","/change-password","/save-ticket-category","save-team","/save-password").hasAnyRole ( "SU", "ADMIN" )
+                .antMatchers("/new-location","/new-admin","/save-location","/save-admin").hasRole ( "SU" )
+                .antMatchers("/save-comment***").authenticated ()
+                .antMatchers("/save-ticket").authenticated ()
                 .antMatchers("/login").permitAll ()
                 .and()
                 .formLogin ()
@@ -60,6 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			  	.clearAuthentication ( true )
                 .deleteCookies("JSESSIONID")
                 .logoutUrl("/logout").logoutSuccessUrl("/login");
+        http
+              .headers().frameOptions().disable();
     }
     
     @Bean
@@ -72,17 +80,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-//        mailSender.setUsername("isoft.code.io@gmail.com");
         mailSender.setUsername(env.getProperty ("spring.mail.username"));
         mailSender.setPassword(env.getProperty ("spring.mail.password"));
-//        mailSender.setPassword("iamisoftcode.io");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
-//
+
         Session session = Session.getInstance ( props , new Authenticator () {
             @Override
             protected PasswordAuthentication getPasswordAuthentication () {
@@ -97,7 +103,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SimpleMailMessage templateSimpleMessage() {
         SimpleMailMessage message = new SimpleMailMessage ();
         message.setText(
-              "A new ticket has been assigned to your team with the following details.\n%s\n");
+              "<h2>A New Ticket has been assigned to your team with the following details.</h3>" +
+					"<p>Subject : %s</p>" +
+					"<p>Issue : %s</p>" +
+					"<p>Created By : %s</p>" +
+					"<p>Created On : %s</p>" +
+					"<p>Contact Number : %s</p>" +
+					"<p>Ticket Priority : %s</p>");
         return message;
     }
 }

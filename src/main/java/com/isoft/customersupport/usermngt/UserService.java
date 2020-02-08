@@ -10,4 +10,5 @@ public interface UserService {
 	User findUserById (@NotNull Integer id);
 	void deleteUser(@NotNull String email);
 	List<User> findAllUsers ();
+	boolean isFirstLogin(String email);
 }

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <![endif]-->
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en" xmlns:th="http://www.thymeleaf.org" > <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en" xmlns:th="http://www.thymeleaf.org" > <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en" xmlns:th="http://www.thymeleaf.org" > <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
@@ -13,7 +13,7 @@
     <section>
         <div class="container">
             <div class="row noti-div">
-                <h3>All Tickets <span class="label label-warning">Total: 2065</span></h3>
+                <h3>All Tickets <span class="label label-warning" th:text="${allTicketCount}">Total: 2065</span></h3>
             </div>
         </div>
     </section>
@@ -21,7 +21,6 @@
         <div class="container" >
             <div class="row">
                 <div class="col-lg-9 col-md-9 col-sm-9">
-                       <!--<div class="hr-div"> <hr /></div>-->
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
@@ -37,123 +36,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>#109</td>
-                                             <td><span class="label label-danger">Open</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-info">Template Support</span></td>
-                                            <td>2nd July 2014</td>
-                                            <td><span class="label label-default">Medium </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
+                                        <tr th:each="ticket : ${allTickets}">
+                                            <td th:text="${'#'+ticketStat.count}" >#109</td>
+                                             <td><span class="label label-danger" th:text="${ticket.ticketStatus}">Open</span></td>
+                                            <td th:text="${ticket.subject}">Template Dummy Subject Line</td>
+                                            <td><span class="label label-info" th:text="${ticket.ticketCategory.assignee.name}">Template Support</span></td>
+                                            <td th:text="${ticket.createdOn.dayOfWeek + ' ' + ticket.createdOn.month + ' ' + ticket.createdOn.year}">2nd July 2014</td>
+                                            <td><span class="label label-default" th:text="${ticket.priority}">Medium </span></td>
+                                            <td><a th:href="@{/single-ticket/{id}(id=${ticket.id})}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
                                         </tr>
-                                       <tr>
-                                            <td>#110</td>
-                                              <td><span class="label label-info">Closed</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-success">Billing Support</span></td>
-                                            <td>30th June 2014</td>
-                                            <td><span class="label label-info">High </span></td>
-                                           <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#111</td>
-                                               <td><span class="label label-info">Closed</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-danger">General Information</span></td>
-                                            <td>12 May 2014</td>
-                                            <td><span class="label label-warning">Very High </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                         <tr>
-                                            <td>#112</td>
-                                              <td><span class="label label-danger">Open</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-info">Billing Support</span></td>
-                                            <td>30th June 2014</td>
-                                            <td><span class="label label-default">High </span></td>
-                                             <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#113</td>
-                                             <td><span class="label label-danger">Open</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-warning">General Information</span></td>
-                                            <td>12 May 2014</td>
-                                            <td><span class="label label-danger">Very High </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                         <tr>
-                                            <td>#114</td>
-                                              <td><span class="label label-info">Closed</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-danger">Billing Support</span></td>
-                                            <td>30th June 2014</td>
-                                            <td><span class="label label-success">High </span></td>
-                                             <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#115</td>
-                                              <td><span class="label label-info">Closed</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-success">General Information</span></td>
-                                            <td>12 May 2014</td>
-                                            <td><span class="label label-warning">Very High </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                         <tr>
-                                            <td>#116</td>
-                                               <td><span class="label label-info">Closed</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-danger">Billing Support</span></td>
-                                            <td>30th June 2014</td>
-                                            <td><span class="label label-danger">High </span></td>
-                                             <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#117</td>
-                                              <td><span class="label label-info">Closed</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-warning">General Information</span></td>
-                                            <td>12 May 2014</td>
-                                            <td><span class="label label-default">Very High </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#118</td>
-                                              <td><span class="label label-info">Closed</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-info">Billing Support</span></td>
-                                            <td>30th June 2014</td>
-                                            <td><span class="label label-success">High </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#119</td>
-                                              <td><span class="label label-info">Closed</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-danger">General Information</span></td>
-                                            <td>12 May 2014</td>
-                                            <td><span class="label label-warning">Very High </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#120</td>
-                                              <td><span class="label label-danger">Open</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-success">Billing Support</span></td>
-                                            <td>30th June 2014</td>
-                                            <td><span class="label label-info">High </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>#121</td>
-                                            <td><span class="label label-danger">Open</span></td>
-                                            <td>Template Dummy Subject Line</td>
-                                            <td><span class="label label-warning">General Information</span></td>
-                                            <td>12 May 2014</td>
-                                            <td><span class="label label-danger">Very High </span></td>
-                                            <td><a href="single-ticket.html" th:href="@{/single-ticket}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>
-                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -173,9 +65,9 @@
     </section>
     <div id="footer" th:insert="layout :: footer"></div>
     <!--  Jquery Core Script -->
-    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script th:src="@{/assets/js/jquery-1.10.2.js}"></script>
     <!--  Core Bootstrap Script -->
-    <script src="assets/js/bootstrap.js"></script>
+    <script th:src="@{/assets/js/bootstrap.js}"></script>
 
 </body>
 </html>

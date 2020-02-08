@@ -15,15 +15,9 @@ public class Util {
 	@Autowired
 	private static ActiveDirectoryRepo activeDirectoryRepo;
 	
-	public static ActiveDirectory getCurrentUser (){
+	public static String getCurrentUser (){
 		UserDetails ud = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		ActiveDirectory adUser = new ActiveDirectory ();
-		adUser.setEmail ( ud.getUsername() );
-		return adUser;
-//		Object [] authorities = ud.getAuthorities ().toArray ();
-//		user.setIsFirstLogin ( authorities[0].toString () );
-//		user.setRole ( Roles.valueOf ( authorities[1].toString ().replaceAll ( "ROLE_","" ) ) );
-//		return activeDirectoryRepo.findByEmail ( ud.getUsername () );
+		return ud.getUsername();
 	}
 	
 	public static String generatePassword() {

@@ -12,9 +12,15 @@ import com.isoft.customersupport.usermngt.ActiveDirectory;
 import com.isoft.customersupport.usermngt.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -41,10 +47,10 @@ public class TicketServiceImpl implements TicketService {
 	}
 	
 	@Override
-	public Ticket createTicket ( Ticket ticketCmd ) {
+	public Ticket createTicket ( Ticket ticketCmd, MultipartFile attachment ) {
 		if(ticketCmd == null) throw new ValidationException ();
 		Ticket newTicket = new Ticket ();
-		newTicket.setUpdatedBy ( Util.getCurrentUser ().getEmail () );
+		newTicket.setCreatedBy ( Util.getCurrentUser () );
 		newTicket.setCreatedOn ( LocalDateTime.now () );
 		newTicket.setSubject ( ticketCmd.getSubject () );
 		newTicket.setIssue ( ticketCmd.getIssue () );
@@ -53,12 +59,30 @@ public class TicketServiceImpl implements TicketService {
 		newTicket.setPriority ( ticketCmd.getPriority () );
 		newTicket.setTicketStatus ( TicketFlag.OPEN );
 		newTicket.setTicketType ( ticketCmd.getTicketType () );
-		log.info ( "location {}, category {}",ticketCmd.getCustomerLocation ().toString (), ticketCmd.getTicketCategory ().toString () );
 		newTicket.setCustomerLocation ( ticketCmd.getCustomerLocation () );
 		newTicket.setTicketCategory ( ticketCmd.getTicketCategory () );
+		if(!attachment.isEmpty ()) {
+			try {
+				InputStream in = attachment.getInputStream ();
+				File currDir = new File ( "." );
+				String path = currDir.getAbsolutePath ();
+				FileOutputStream f = new FileOutputStream (
+					  path.substring ( 0 , path.length () - 1 ) + attachment.getOriginalFilename () );
+				int ch = 0;
+				while ( ( ch = in.read () ) != - 1 ) {
+					f.write ( ch );
+				}
+				
+				f.flush ();
+				f.close ();
+				newTicket.setAttachmentName ( attachment.getResource ().getFilename () );
+			}
+			catch ( Exception e ) {
+				e.printStackTrace ();
+			}
+		}
 		ticketRepository.save(newTicket);
-		log.info ( "ticket {}",newTicket.toString () );
-		sendTicketMail(newTicket, newTicket.getTicketCategory().getAssignee ().getSupervisor (), newTicket.getTicketCategory().getAssignee ());
+		sendTicketMail(newTicket, newTicket.getTicketCategory().getAssignee ().getSupervisor (), newTicket.getTicketCategory().getAssignee (), newTicket.getAttachmentName ());
 		return newTicket;
 	}
 	
@@ -90,13 +114,12 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Override
 	public List< Ticket > findAllOpenTicket () {
-		log.info ( ticketRepository.findAll ().toString () );
 		return ticketRepository.findTicketByTicketStatus(TicketFlag.OPEN);
 	}
 	
 	@Override
-	public Set< Ticket > findAllUnseenTicket () {
-		return ticketRepository.findTicketByCommentsIsNull();
+	public List< Ticket > findAllSeenTicket () {
+		return ticketRepository.findTicketByTicketStatus(TicketFlag.SEEN);
 	}
 	
 	@Override
@@ -105,7 +128,23 @@ public class TicketServiceImpl implements TicketService {
 	}
 	
 	@Override
-	public void sendTicketMail ( Ticket ticket, User supervisor, Team team ) {
-		ticketMailService.sendTicketMessage ( ticket.getSubject (), String.format ( template.getText (),ticket.getIssue () ), ticket.getCopyEmail (), supervisor.getEmail (), team.getMembers ().stream ().map( ActiveDirectory :: getEmail ).collect ( Collectors.toList () ) );
+	public void sendTicketMail ( Ticket ticket, User supervisor, Team team, String attachmentFileName ) {
+		ticketMailService.sendTicketMessage (
+			  ticket.getSubject (),
+			  String.format ( template.getText (),ticket.getSubject (), ticket.getIssue (), ticket.getCreatedBy (),
+					ticket.getCreatedOn (), ! ticket.getPhoneNumber ().equals ( "" ) ? ticket.getPhoneNumber () : "N/A", ticket.getPriority () ),
+			  ticket.getCopyEmail (),
+			  supervisor.getEmail (),
+			  team.getMembers ().stream ().map( ActiveDirectory :: getEmail ).collect ( Collectors.toList () ),
+			  attachmentFileName
+		);
+	}
+	
+	@Override
+	public Ticket setTicketAsSeen ( Integer id ) {
+		Ticket ticket = findTicketById ( id );
+		if (ticket.getTicketStatus () != TicketFlag.SEEN)
+			ticket.setTicketStatus ( TicketFlag.SEEN );
+		return ticketRepository.save ( ticket );
 	}
 }
