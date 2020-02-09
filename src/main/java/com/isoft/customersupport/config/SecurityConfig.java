@@ -92,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         Session session = Session.getInstance ( props , new Authenticator () {
             @Override
             protected PasswordAuthentication getPasswordAuthentication () {
-                return new PasswordAuthentication ("isoft.code.io@gmail.com","iamisoftcode.io" );
+                return new PasswordAuthentication (env.getProperty ("spring.mail.username"),env.getProperty ("spring.mail.password") );
             }
         } );
         mailSender.setSession ( session );
