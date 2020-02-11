@@ -1,6 +1,6 @@
 package com.isoft.customersupport.ticket.comments;
 
-import com.isoft.customersupport.config.TicketMailService;
+import com.isoft.customersupport.ticket.mail.TicketMailService;
 import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.exception.TicketNotFoundException;
 import com.isoft.customersupport.ticket.Ticket;

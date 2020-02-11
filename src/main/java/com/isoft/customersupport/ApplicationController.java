@@ -1,6 +1,5 @@
-package com.isoft.customersupport.usermngt;
+package com.isoft.customersupport;
 
-import com.isoft.customersupport.config.ApplicationException;
 import com.isoft.customersupport.config.Messages;
 import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.location.CustomerLocation;
@@ -14,25 +13,24 @@ import com.isoft.customersupport.ticket.category.Category;
 import com.isoft.customersupport.ticket.category.CategoryService;
 import com.isoft.customersupport.ticket.comments.Comments;
 import com.isoft.customersupport.ticket.comments.CommentsService;
+import com.isoft.customersupport.usermngt.ActiveDirectoryRepo;
+import com.isoft.customersupport.usermngt.User;
+import com.isoft.customersupport.usermngt.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
 @Controller @Slf4j
-public class UserController {
+public class ApplicationController {
 	
 	@Value("${ticket.type}")
 	public String [] ticketType;
@@ -51,7 +49,7 @@ public class UserController {
 	
 	
 	@Autowired
-	public UserController ( CustomerLocationService customerLocationService , CategoryService categoryService , TeamService teamService , Messages messages , UserService userService , TicketService ticketService, ActiveDirectoryRepo activeDirectoryRepo, CommentsService commentService ) {
+	public ApplicationController ( CustomerLocationService customerLocationService , CategoryService categoryService , TeamService teamService , Messages messages , UserService userService , TicketService ticketService, ActiveDirectoryRepo activeDirectoryRepo, CommentsService commentService ) {
 		this.customerLocationService = customerLocationService;
 		this.categoryService = categoryService;
 		this.teamService = teamService;
@@ -94,7 +92,6 @@ public class UserController {
 		return "login";
 	}
 	
-//	@ExceptionHandler( ApplicationException.class )
 	@GetMapping("/error")
 	public String getErrorPage(){
 		return "error";

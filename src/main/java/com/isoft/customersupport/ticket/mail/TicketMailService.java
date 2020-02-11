@@ -1,4 +1,4 @@
-package com.isoft.customersupport.config;
+package com.isoft.customersupport.ticket.mail;
 
 import org.springframework.web.multipart.MultipartFile;
 

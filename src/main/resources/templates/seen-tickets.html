@@ -37,7 +37,7 @@
                                         <tr th:each="ticket : ${seenTickets}">
                                             <td th:text="${'#'+ticketStat.count}">#109</td>
                                             <td th:text="${ticket.subject}">Template Dummy Subject Line</td>
-                                            <td><span class="label label-danger" th:text="${ticket.ticketCategory.assignee.name}">Template Support</span></td>
+                                            <td><span class="label label-danger" th:text="${ticket.ticketCategory.ticketClass}">Template Support</span></td>
                                             <td th:text="${ticket.createdOn.dayOfWeek + ' ' + ticket.createdOn.month + ' ' + ticket.createdOn.year}">2nd July 2014</td>
                                             <td><span class="label label-default" th:text="${ticket.priority}">Medium </span></td>
                                               <td><a th:href="@{/single-ticket/{id}(id=${ticket.id})}" class="label label-success">Details <i class="fa fa-forward"></i></a></td>

@@ -34,7 +34,7 @@
                             <span class="label label-danger">New Reply</span>
                             <span class="label label-info" th:text="${seenTicketCount}">145</span>
                             <p>
-                                New Replies Of Your Support Tickets
+                                New Replies Of Your Open Tickets
                             </p>
 
                         </div>
@@ -79,8 +79,7 @@
                                 <select class="form-control" required="required" th:field="*{ticketType}">
                                     <option value="">select type...</option>
                                     <option th:each="type : ${types}" th:text="${type}" th:value="${type}">Complaint</option>
-                                    <!--<option th:each="type : ${types}" th:text="${type}" th:value="${type}">Complaint</option>-->
-                                    <option value="Other">Other</option>
+                                    <!--<option value="Other">Other</option>-->
                                 </select>
                             </div>
 
@@ -105,7 +104,7 @@
                                 <label>Select Your Branch</label>
                                 <select class="form-control" required="required" th:field="*{customerLocation}">
                                     <option value="">select branch...</option>
-                                    <option th:each="location : ${locations}" th:text="${location.customerBranch}" th:value="${location.id}">Head Office</option>
+                                    <option th:each="location : ${locations}" th:text="|000${location.id} - ${location.customerBranch}|" th:value="${location.id}">Head Office</option>
                                 </select>
                             </div>
 
@@ -223,9 +222,8 @@
                             <div class="row">
                                 <div class="form-group col-lg-3 col-md-3 col-sm-3"></div>
                                 <div class="form-group col-lg-6 col-md-4 col-sm-4">
-                                    <label>Team Members (separated by comma)</label>
+                                    <label>Team Members </label>
                                     <select multiple="multiple" size="15" autocomplete="off" class="form-control" required="required" th:field="*{members}">
-                                        <option value="">select members...</option>
                                         <option th:each="member : ${members}" th:text="${member.email}" th:value="${member.id}">Nigeria</option>
                                     </select>
                                 </div>

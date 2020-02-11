@@ -2,6 +2,7 @@ package com.isoft.customersupport.ticket.category;
 
 import com.isoft.customersupport.team.Team;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -11,8 +12,10 @@ import java.util.Map;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 	
+	private final CategoryRepository categoryRepository;
+	
 	@Autowired
-	private CategoryRepository categoryRepository;
+	public CategoryServiceImpl ( CategoryRepository categoryRepository ) {this.categoryRepository = categoryRepository;}
 	
 	@Override
 	public Category createCategory ( Category category ) {
@@ -26,12 +29,6 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	@Override
 	public List< Category > findAllCategory () {
-		return categoryRepository.findAll ();
-	}
-	
-	public Team assignTicketToTeamByTicketClass (String ticketClass){
-		Map<String, Team> teamMap = new HashMap<> (  );
-		findAllCategory ().forEach ( c -> teamMap.put ( c.getTicketClass (), c.getAssignee () ));
-		return teamMap.get ( ticketClass );
+		return categoryRepository.findAll ( Sort.by ( "ticketClass" ));
 	}
 }

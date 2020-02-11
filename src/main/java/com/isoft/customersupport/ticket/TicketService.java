@@ -9,7 +9,6 @@ import java.util.Set;
 
 public interface TicketService {
 	Ticket createTicket(Ticket newTicketCmd, MultipartFile attachment );
-	Ticket updateTicket(Ticket newTicketCmd);
 	Ticket findTicketById(Integer id);
 	Ticket findTicketByCreatorEmail(String email);
 	Ticket findTicketByResolverEmail(String email);

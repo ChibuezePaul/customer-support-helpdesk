@@ -1,49 +1,38 @@
 package com.isoft.customersupport.ticket;
 
-import com.isoft.customersupport.config.TicketMailService;
+import com.isoft.customersupport.ticket.mail.TicketMailService;
 import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.exception.TicketNotFoundException;
 import com.isoft.customersupport.exception.ValidationException;
 import com.isoft.customersupport.location.CustomerLocationRepository;
 import com.isoft.customersupport.team.Team;
-import com.isoft.customersupport.ticket.category.CategoryRepository;
-import com.isoft.customersupport.ticket.category.CategoryServiceImpl;
 import com.isoft.customersupport.usermngt.ActiveDirectory;
 import com.isoft.customersupport.usermngt.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service @Slf4j
 public class TicketServiceImpl implements TicketService {
 	
 	private final TicketRepository ticketRepository;
-	public final SimpleMailMessage template;
+	private final SimpleMailMessage template;
 	private final TicketMailService ticketMailService;
-	private final CustomerLocationRepository locationRepository;
-	private final CategoryRepository categoryRepository;
-	private CategoryServiceImpl categoryService;
 	
 	@Autowired
-	public TicketServiceImpl ( TicketRepository ticketRepository , SimpleMailMessage template , TicketMailService ticketMailService, CustomerLocationRepository locationRepository, CategoryRepository categoryRepository, CategoryServiceImpl categoryService ) {
+	public TicketServiceImpl ( TicketRepository ticketRepository , SimpleMailMessage template , TicketMailService ticketMailService ) {
 		this.ticketRepository = ticketRepository;
 		this.template = template;
 		this.ticketMailService = ticketMailService;
-		this.locationRepository = locationRepository;
-		this.categoryRepository = categoryRepository;
-		this.categoryService = categoryService;
 	}
 	
 	@Override
@@ -87,12 +76,6 @@ public class TicketServiceImpl implements TicketService {
 	}
 	
 	@Override
-	public Ticket updateTicket ( Ticket newTicketCmd ) {
-		Ticket ticket = ticketRepository.findById ( newTicketCmd.getId () ).orElseThrow ( TicketNotFoundException::new );
-		return null;
-	}
-	
-	@Override
 	public Ticket findTicketById ( Integer id ) {
 		return ticketRepository.findById ( id ).orElseThrow ( TicketNotFoundException::new );
 	}
@@ -131,8 +114,8 @@ public class TicketServiceImpl implements TicketService {
 	public void sendTicketMail ( Ticket ticket, User supervisor, Team team, String attachmentFileName ) {
 		ticketMailService.sendTicketMessage (
 			  ticket.getSubject (),
-			  String.format ( template.getText (),ticket.getSubject (), ticket.getIssue (), ticket.getCreatedBy (),
-					ticket.getCreatedOn (), ! ticket.getPhoneNumber ().equals ( "" ) ? ticket.getPhoneNumber () : "N/A", ticket.getPriority () ),
+			  String.format ( template.getText (),ticket.getTicketType (),ticket.getSubject (), ticket.getIssue (), ticket.getCreatedBy (), ticket.getCreatedOn (),
+					! ticket.getPhoneNumber ().equals ( "" ) ? ticket.getPhoneNumber () : "N/A", ticket.getPriority (), ticket.getTicketCategory ().getTAT () ),
 			  ticket.getCopyEmail (),
 			  supervisor.getEmail (),
 			  team.getMembers ().stream ().map( ActiveDirectory :: getEmail ).collect ( Collectors.toList () ),
@@ -143,7 +126,7 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public Ticket setTicketAsSeen ( Integer id ) {
 		Ticket ticket = findTicketById ( id );
-		if (ticket.getTicketStatus () != TicketFlag.SEEN)
+		if (ticket.getTicketStatus ().equals ( TicketFlag.OPEN ))
 			ticket.setTicketStatus ( TicketFlag.SEEN );
 		return ticketRepository.save ( ticket );
 	}

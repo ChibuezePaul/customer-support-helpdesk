@@ -1,4 +1,4 @@
-package com.isoft.customersupport.config;
+package com.isoft.customersupport.exception;
 
 public class ApplicationException extends RuntimeException {
 

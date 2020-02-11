@@ -103,13 +103,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SimpleMailMessage templateSimpleMessage() {
         SimpleMailMessage message = new SimpleMailMessage ();
         message.setText(
-              "<h2>A New Ticket has been assigned to your team with the following details.</h3>" +
+              "<h2>A new ticket has been assigned to your team with the following details.</h3>" +
+					"<p>Ticket Type : %s</p>" +
 					"<p>Subject : %s</p>" +
 					"<p>Issue : %s</p>" +
 					"<p>Created By : %s</p>" +
 					"<p>Created On : %s</p>" +
 					"<p>Contact Number : %s</p>" +
-					"<p>Ticket Priority : %s</p>");
+					"<p>Ticket Priority : %s</p>" +
+					"<p>Ticket TAT : %s</p>");
         return message;
     }
 }

@@ -15,7 +15,7 @@ import javax.validation.constraints.Pattern;
 @EqualsAndHashCode ( callSuper = true )
 public class User extends AbstractEntity {
 	
-	@Column(unique = true) @Email(flags = Pattern.Flag.CASE_INSENSITIVE) @NotBlank
+	@Column(unique = true) @Email(flags = Pattern.Flag.CASE_INSENSITIVE)
 	private String email;
 	
 //	@NotBlank

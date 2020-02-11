@@ -1,10 +1,11 @@
 package com.isoft.customersupport.usermngt;
 
-import com.isoft.customersupport.config.TicketMailService;
+import com.isoft.customersupport.ticket.mail.TicketMailService;
 import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.exception.UserNotFoundException;
 import com.isoft.customersupport.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ public class UserServiceImpl implements UserService {
 	public final SimpleMailMessage template;
 	private final TicketMailService ticketMailService;
 	private final PasswordEncoder encoder;
+	@Value ( "${server.port}" )
+	private String appPort;
 	
 	@Autowired
 	public UserServiceImpl ( UserRepository userRepository , SimpleMailMessage template , TicketMailService ticketMailService , PasswordEncoder encoder ) {
@@ -35,7 +38,7 @@ public class UserServiceImpl implements UserService {
 		String tempPassword = Util.generatePassword ();
 		newUser.setPassword ( encoder.encode ( tempPassword ) );
 		newUser.setRole ( Roles.ADMIN );
-		ticketMailService.sendNewUserCreatedMessage ( "Supervisor Account Created", "Username : "+ newUser.getEmail () + "<br />Password : "+tempPassword , newUser.getEmail () );
+		ticketMailService.sendNewUserCreatedMessage ( "Supervisor Account Created", "Username : "+ newUser.getEmail () + "<br />Password : "+tempPassword , newUser.getEmail ()+"<br />Kindly visit the portal at http://localhost:"+appPort+" to change your password" );
 		return userRepository.save ( newUser );
 	}
 	

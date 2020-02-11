@@ -4,6 +4,7 @@ import com.isoft.customersupport.usermngt.ActiveDirectory;
 import com.isoft.customersupport.usermngt.ActiveDirectoryRepo;
 import com.isoft.customersupport.usermngt.User;
 import com.isoft.customersupport.usermngt.UserRepository;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

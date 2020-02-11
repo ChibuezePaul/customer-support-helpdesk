@@ -17,7 +17,7 @@
                     <h3>Ticket ID  <span class="label label-danger" th:text="${'#'+singleTicket.id}">#109</span>
                         Status <span class="label label-info" th:text="${singleTicket.ticketStatus}">Closed</span>
                         Priority <span class="label label-warning" th:text="${singleTicket.priority}">High</span>
-                        Category <span class="label label-success" th:text="${singleTicket.ticketCategory.assignee.name}">Template Support</span>
+                        Category <span class="label label-success" th:text="${singleTicket.ticketCategory.ticketClass}">Template Support</span>
                     </h3>
 
                     <h3>Subject <span class="label label-default" th:text="${singleTicket.subject}">Template Dummy Subject Line</span></h3>

@@ -2,6 +2,7 @@ package com.isoft.customersupport.location;
 
 import com.isoft.customersupport.exception.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +29,6 @@ public class CustomerLocationServiceImpl implements CustomerLocationService {
 	
 	@Override
 	public List< CustomerLocation > findAllCustomerLocation () {
-//		locationRepository.findAll ().forEach ( a -> System.out.println (a.getCustomerCountry ().replaceAll ( "","" )) );
-		return locationRepository.findAll ();
+		return locationRepository.findAll ( Sort.by ( "id" ));
 	}
 }

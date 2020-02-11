@@ -1,4 +1,4 @@
-package com.isoft.customersupport.config;
+package com.isoft.customersupport.ticket.mail;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +10,20 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 @Component @Slf4j
 public class TicketMailServiceImpl implements TicketMailService {
 	
-	public final JavaMailSender emailSender;
+	private final JavaMailSender emailSender;
 	@Value ( "${mail.from}" )
 	String emailFrom;
+	@Value ( "${spring.mail.username}" )
+	private String emailFromUsername;
 	@Value ( "${spring.servlet.multipart.location}" )
 	String attachmentPath;
 	
@@ -31,11 +35,7 @@ public class TicketMailServiceImpl implements TicketMailService {
 	public void sendNewUserCreatedMessage ( String subject , String text , String to ) {
 		try {
 			MimeMessage message = emailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true);
-			helper.setFrom ( emailFrom );
-			helper.setTo( to );
-			helper.setSubject ( subject );
-			helper.setText ( text, true );
+			prepareMessage ( message, subject , text , null, Collections.singletonList ( to ) );
 			emailSender.send ( message );
 		}catch ( Exception e ){
 			e.printStackTrace ();
@@ -74,13 +74,17 @@ public class TicketMailServiceImpl implements TicketMailService {
 	}
 	
 	private MimeMessageHelper prepareMessage ( MimeMessage message , String subject , String text , String bc , List< String > to ) throws MessagingException {
-		message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true);
-		helper.setFrom ( emailFrom );
+		try {
+			helper.setFrom ( new InternetAddress (emailFromUsername, emailFrom) );
+		}
+		catch ( Exception e ) {
+			helper.setFrom(emailFrom);
+		}
 		helper.setValidateAddresses ( true );
-		helper.setReplyTo ( "noreply@kemmtech.com" );
+//		helper.setReplyTo ( "noreply@kemmtech.com" );
 		helper.setSubject(subject);
-		helper.setBcc ( bc );
+		if(bc != null) helper.setBcc ( bc );
 		helper.setText(text,true);
 		for ( String t : to ){
 			helper.setTo ( t );

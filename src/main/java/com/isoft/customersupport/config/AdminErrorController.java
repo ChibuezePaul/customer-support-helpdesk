@@ -1,11 +1,10 @@
 package com.isoft.customersupport.config;
 
+import com.isoft.customersupport.exception.ApplicationException;
 import com.isoft.customersupport.location.CustomerLocationService;
 import com.isoft.customersupport.ticket.Ticket;
 import com.isoft.customersupport.ticket.category.CategoryService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +30,7 @@ public class AdminErrorController {
 	@Autowired
 	private CustomerLocationService customerLocationService;
 	
-	@ExceptionHandler (ApplicationException.class)
+	@ExceptionHandler ( ApplicationException.class)
     @ResponseStatus ( HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView exception(final ApplicationException throwable, Model model, WebRequest request) {
         log.error("Exception during execution of HelpDesk Application", throwable);

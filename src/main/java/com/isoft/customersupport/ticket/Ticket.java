@@ -7,12 +7,12 @@ import com.isoft.customersupport.ticket.comments.Comments;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.envers.Audited;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Audited @Entity @Data @EqualsAndHashCode(callSuper = true, exclude = "comments")
@@ -52,8 +52,7 @@ public class Ticket extends AbstractEntity {
 	private CustomerLocation customerLocation;
 	
 	@ManyToMany
-	private Set< Comments > comments;
+	private List< Comments > comments;
 	
-	@Lob
 	private String attachmentName;
 }
