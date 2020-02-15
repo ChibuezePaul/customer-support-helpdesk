@@ -6,17 +6,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:insert="layout :: head('Error')"></head>
-<body th:insert="layout :: header">
+<body>
     <div id="head" th:insert="layout :: header"></div>
+    <section th:insert="layout :: subHeader"></section>
 
-    <h2>Error Page!</h2>
-    <section id="main" class="page-error"
-             th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
-        <div class="error-page">
-            <div class="error-content">
-                <!--<h2><i class="ti-face-sad"></i></h2> ${httpStatus.reasonPhrase}  -->
-                <h3><small th:text="${error}">Oops! Page not found.</small></h3>
+    <section id="main"  th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+        <div class="container error-page">
+            <div class="row">
+                <div class="col-lg-9 col-md-9 col-sm-9 text-center" style="margin-top: 50px">
+                    <!--<h2><i class="ti-face-sad"></i></h2> ${httpStatus.reasonPhrase}  -->
+                    <h1><small th:text="${error}" class="text-center">Oops! Page not found.</small></h1>
+                </div>
+                <div th:insert="layout :: sidebar"></div>
             </div>
+
             <!-- /.error-content -->
         </div>
         <!-- /.error-page -->

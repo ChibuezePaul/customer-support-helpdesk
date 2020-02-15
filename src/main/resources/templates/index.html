@@ -5,57 +5,10 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!--<![endif]-->
-<head th:insert="layout :: head('Home')">
-
-</head>
+<head th:insert="layout :: head('Home')"></head>
 <body>
     <div id="head" th:insert="layout :: header"></div>
-    <section>
-        <div class="container">
-            <div class="row noti-div">
-                <div class="col-lg-4 col-md-4 col-sm-4  text-center">
-                    <a th:href="@{/open-tickets}" href="open-tickets.html">
-                        <div class="alert alert-success">
-                            <i class="fa fa-folder-open-o fa-4x"></i>
-                            <span class="label label-warning">Open Tickets</span>
-                            <span class="label label-success" th:text="${openTicketCount}">45</span>
-                            <p>
-                                New Open Tickets Which Are Not Replied Yet
-                            </p>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-lg-4 col-md-4 col-sm-4 text-center">
-                    <a th:href="@{/seen-tickets}">
-                        <div class="alert alert-info">
-                            <i class="fa fa-comments-o fa-4x"></i>
-
-                            <span class="label label-danger">New Reply</span>
-                            <span class="label label-info" th:text="${seenTicketCount}">145</span>
-                            <p>
-                                New Replies Of Your Open Tickets
-                            </p>
-
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4  text-center">
-                    <a th:href="@{/all-tickets}" href="ticket-history.html">
-                        <div class="alert alert-warning">
-                            <i class="fa fa-briefcase fa-4x"></i>
-                            <span class="label label-success">Total Tickets</span>
-                            <span class="label label-warning" th:text="${allTicketCount}">2065</span>
-                            <p>
-                                The Total Ticket Which You Send Till Date
-                            </p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
+    <section th:insert="layout :: subHeader"></section>
     <h4 class="container text-success text-left" th:text="${message}">Success Message</h4>
     <section id="main" >
         <div class="container">
@@ -75,10 +28,10 @@
                                 <!--<li th:attr="class='alert alert-danger text-danger' ? ${isFileLarge}  : 'hidden'" th:text="${fileMessage}"></li>-->
                             </section>
                             <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                <label>Ticket Type</label>
-                                <select class="form-control" required="required" th:field="*{ticketType}">
+                                <label><span class="text-danger">*</span>Ticket Type</label>
+                                <select id="ticketType" class="form-control" required="required" th:field="*{ticketType}">
                                     <option value="">select type...</option>
-                                    <option th:each="type : ${types}" th:text="${type}" th:value="${type}">Complaint</option>
+                                    <option th:each="ticketType : ${ticketTypes}" th:text="${ticketType}" th:value="${ticketType.toUpperCase()}">Complaint</option>
                                     <!--<option value="Other">Other</option>-->
                                 </select>
                             </div>
@@ -86,22 +39,27 @@
                             <div class="form-group col-lg-6 col-md-6 col-sm-6">
                                 <label>Severity Level</label>
                                 <select class="form-control" th:field="*{priority}">
-                                    <option value="LOW">Low </option>
-                                    <option value="MEDIUM">Medium</option>
-                                    <option value="HIGH">High</option>
+                                    <option th:each="ticketPriority : ${ticketPriorities}" th:text="${ticketPriority}" th:value="${ticketPriority.toUpperCase()}">Low</option>
                                 </select>
                             </div>
                             <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                <label>Ticket Class</label>
+                                <label><span class="text-danger">*</span>Ticket Class</label>
                                 <select class="form-control" required="required" th:field="*{ticketCategory}">
                                     <option value="">select class...</option>
                                     <option th:each="category : ${categories}" th:text="${category.ticketClass}" th:value="${category.id}">IT Support</option>
-
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                                <label><span class="text-danger">*</span>Ticket Title</label>
+                                <select id="ticketTitle" class="form-control" required="required" th:field="*{ticketTitle}">
+                                    <option value="">select title...</option>
+                                    <!--<option th:each="ticketType : ${ticketTypes}" th:text="${ticketType}" th:value="${ticketType.toUpperCase()}">Complaint</option>-->
+                                    <!--<option value="Other">Other</option>-->
                                 </select>
                             </div>
 
                             <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                <label>Select Your Branch</label>
+                                <label><span class="text-danger">*</span>Select Your Branch</label>
                                 <select class="form-control" required="required" th:field="*{customerLocation}">
                                     <option value="">select branch...</option>
                                     <option th:each="location : ${locations}" th:text="|000${location.id} - ${location.customerBranch}|" th:value="${location.id}">Head Office</option>
@@ -122,15 +80,15 @@
                                 <input type="file" name="attachment" autocomplete="off" class="form-control">
                             </div>
                             <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                <label>Enter Issue Subject</label>
+                                <label><span class="text-danger">*</span>Enter Issue Subject</label>
                                 <input type="text" required autocomplete="off" class="form-control" th:field="*{subject}">
                             </div>
-                            <div class="form-group col-lg-8 col-md-8 col-sm-8">
-                                <label>Enter Issue Details</label>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                                <label><span class="text-danger">*</span>Enter Issue Details</label>
                                 <textarea class="form-control" rows="10" required autocomplete="off" th:field="*{issue}"></textarea>
                             </div>
 
-                            <div class="form-group col-lg-4 col-md-4 col-sm-4" style="margin-top: 220px;">
+                            <div class="form-group col-lg-12 col-md-12 col-sm-12">
                                 <button type="submit" class="btn btn-primary pull-right">Send Ticket</button>
                             </div>
                         </form>
@@ -150,24 +108,13 @@
                                 <li th:each="e : ${#fields.detailedErrors()}" th:attr="field=${e.fieldName}"
                                     th:text="${e.message}"></li>
                             </span>
-                            <!--<div class="row">-->
-                                <!--<div class="form-group col-lg-6 col-md-6 col-sm-6">-->
-                                    <!--<label>Ticket Type</label>-->
-                                    <!--<input type="text" autocomplete="off" class="form-control" required="required" th:field="*{ticketType}">-->
-                                <!--</div>-->
-                                <!--<div class="form-group col-lg-6 col-md-6 col-sm-6">-->
-                            <!--<label>Current Status</label>-->
-                            <!--<input type="text" autocomplete="off" class="form-control" th:field="*{ticketStatus}">-->
-                                <!--</div>-->
-                            <!--</div>-->
-
                             <div class="row">
                                 <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                    <label>Ticket Class</label>
+                                    <label><span class="text-danger">*</span>Ticket Class</label>
                                     <input type="text" autocomplete="off" class="form-control" required="required" th:field="*{ticketClass}">
                                 </div>
                                 <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                    <label>Select Team To Assign Ticket Class</label>
+                                    <label><span class="text-danger">*</span>Select Team To Assign Ticket Class</label>
                                     <select class="form-control" required="required" th:field="*{assignee}">
                                         <option value="">select team...</option>
                                         <option th:each="team : ${teams}" th:text="${team.name}" th:value="${team.id}">IT Support</option>
@@ -202,7 +149,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-3 col-md-3 col-sm-3"></div>
                                 <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                    <label>Name of Team</label>
+                                    <label><span class="text-danger">*</span>Name of Team</label>
                                     <input type="text" autocomplete="off" class="form-control" required="required" th:field="*{name}">
                                 </div>
                                 <div class="form-group col-lg-3 col-md-3 col-sm-3"></div>
@@ -211,7 +158,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-3 col-md-3 col-sm-3"></div>
                                 <div class="form-group col-lg-6 col-md-6 col-sm-6">
-                                    <label>Supervisor</label>
+                                    <label><span class="text-danger">*</span>Supervisor</label>
                                     <select type="text" autocomplete="off" class="form-control" required="required" th:field="*{supervisor}">
                                         <option th:each="supervisor : ${supervisors}" th:text="${supervisor.email}" th:value="${supervisor.id}">Supervisor</option>
                                     </select>
@@ -222,7 +169,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-3 col-md-3 col-sm-3"></div>
                                 <div class="form-group col-lg-6 col-md-4 col-sm-4">
-                                    <label>Team Members </label>
+                                    <label><span class="text-danger">*</span>Team Members </label>
                                     <select multiple="multiple" size="15" autocomplete="off" class="form-control" required="required" th:field="*{members}">
                                         <option th:each="member : ${members}" th:text="${member.email}" th:value="${member.id}">Nigeria</option>
                                     </select>
@@ -248,7 +195,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4"></div>
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                    <label>Branch Name</label>
+                                    <label><span class="text-danger">*</span>Branch Name</label>
                                     <input type="text" autocomplete="off" class="form-control" required="required" th:field="*{customerBranch}">
                                 </div>
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4"></div>
@@ -257,7 +204,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4"></div>
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                    <label>Office City</label>
+                                    <label><span class="text-danger">*</span>City</label>
                                     <input type="text" autocomplete="off" class="form-control" required="required" th:field="*{customerCity}">
                                 </div>
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4"></div>
@@ -266,7 +213,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4"></div>
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                    <label>Office Country</label>
+                                    <label><span class="text-danger">*</span>Country</label>
                                     <input type="text" autocomplete="off" class="form-control" th:field="*{customerCountry}">
                                 </div>
                                 <div class="form-group col-lg-4 col-md-4 col-sm-4"></div>
@@ -361,5 +308,6 @@
     <!--  Core Bootstrap Script -->
     <script th:src="@{/assets/js/bootstrap.js}"></script>
 
+    <script th:src="@{/assets/js/custom.js}"></script>
 </body>
 </html>

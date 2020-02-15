@@ -1,11 +1,10 @@
 package com.isoft.customersupport.ticket;
 
-import com.isoft.customersupport.ticket.mail.TicketMailService;
 import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.exception.TicketNotFoundException;
 import com.isoft.customersupport.exception.ValidationException;
-import com.isoft.customersupport.location.CustomerLocationRepository;
 import com.isoft.customersupport.team.Team;
+import com.isoft.customersupport.ticket.mail.TicketMailService;
 import com.isoft.customersupport.usermngt.ActiveDirectory;
 import com.isoft.customersupport.usermngt.User;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service @Slf4j
@@ -38,6 +39,7 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public Ticket createTicket ( Ticket ticketCmd, MultipartFile attachment ) {
 		if(ticketCmd == null) throw new ValidationException ();
+		if(!isValidTicketTitle ( ticketCmd.getTicketTitle () )) throw new ValidationException ();
 		Ticket newTicket = new Ticket ();
 		newTicket.setCreatedBy ( Util.getCurrentUser () );
 		newTicket.setCreatedOn ( LocalDateTime.now () );
@@ -48,6 +50,7 @@ public class TicketServiceImpl implements TicketService {
 		newTicket.setPriority ( ticketCmd.getPriority () );
 		newTicket.setTicketStatus ( TicketFlag.OPEN );
 		newTicket.setTicketType ( ticketCmd.getTicketType () );
+		newTicket.setTicketTitle ( ticketCmd.getTicketTitle () );
 		newTicket.setCustomerLocation ( ticketCmd.getCustomerLocation () );
 		newTicket.setTicketCategory ( ticketCmd.getTicketCategory () );
 		if(!attachment.isEmpty ()) {
@@ -114,7 +117,7 @@ public class TicketServiceImpl implements TicketService {
 	public void sendTicketMail ( Ticket ticket, User supervisor, Team team, String attachmentFileName ) {
 		ticketMailService.sendTicketMessage (
 			  ticket.getSubject (),
-			  String.format ( template.getText (),ticket.getTicketType (),ticket.getSubject (), ticket.getIssue (), ticket.getCreatedBy (), ticket.getCreatedOn (),
+			  String.format ( Objects.requireNonNull ( template.getText () ) ,ticket.getTicketType (),ticket.getTicketCategory ().getTicketClass (), ticket.getTicketTitle (), ticket.getIssue (), ticket.getCreatedBy (), ticket.getCreatedOn (),
 					! ticket.getPhoneNumber ().equals ( "" ) ? ticket.getPhoneNumber () : "N/A", ticket.getPriority (), ticket.getTicketCategory ().getTAT () ),
 			  ticket.getCopyEmail (),
 			  supervisor.getEmail (),
@@ -129,5 +132,25 @@ public class TicketServiceImpl implements TicketService {
 		if (ticket.getTicketStatus ().equals ( TicketFlag.OPEN ))
 			ticket.setTicketStatus ( TicketFlag.SEEN );
 		return ticketRepository.save ( ticket );
+	}
+	
+	@Override
+	public boolean isValidTicketTitle ( String ticketTitle ) {
+		if ( ticketTitle != null ) {
+			return Arrays.asList (
+				  "ATM – Link down" , "ATM – Not dispensing" , "ATM – Out of Service" , "Cash balance – unable to login to portal"
+				  , "Cheque truncation – faulty cheque scanner" , "Cheque truncation – unable to truncate cheque" , "Clearing – Failing"
+				  , "Core Banking Application down" , "Core Banking slow" , "Form M – unable to download form" , "File Server – unable to access a shared folder"
+				  , "GSS Scanner – Scanner failing" , "Hardware – Faulty Monitor" , "Hardware – Faulty Printer" , "Hardware – Faulty Switch" , "Hardware – Laptop not booting"
+				  , "Hardware – Laptop slow" , "Hardware – OS crashed" , "Hardware – Printer not printing" , "Hardware – Router not coming up" , "Leave Portal down"
+				  , "Loan Portal – Portal not loading" , "Loan Portal – unable to login" , "Network – Link down" , "Network – slow link" , "Western Union down" , "ATM – Install new OS on ATM"
+				  , "ATM – Setup new ATM" , "Cheque Truncation – Request to setup Cheque Truncation" , "Clearing – setup page" , "File server – request to access shared folder"
+				  , "Hardware – Fix Printer Toner" , "Hardware – Install Laptop" , "Hardware – Install Printer" , "Hardware – Install Scanner" , "Hardware – Setup Router"
+				  , "Leave Portal – create login details" , "Network – Configure Network Device" , "Network – Configure Network Port" , "Network – Request to setup network"
+				  , "Outlook – configure outlook" , "Outlook – create personal folder" , "Outlook – create rules" , "Request to bring in a device" , "Request to install OS on Data Centre Device"
+				  , "System Support – setup Users" , "Western Union – setup"
+			).contains ( ticketTitle.trim () );
+		}
+		return false;
 	}
 }

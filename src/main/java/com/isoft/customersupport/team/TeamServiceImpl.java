@@ -1,17 +1,19 @@
 package com.isoft.customersupport.team;
 
+import com.isoft.customersupport.config.Util;
+import com.isoft.customersupport.exception.ValidationException;
 import com.isoft.customersupport.usermngt.ActiveDirectory;
 import com.isoft.customersupport.usermngt.ActiveDirectoryRepo;
 import com.isoft.customersupport.usermngt.User;
 import com.isoft.customersupport.usermngt.UserRepository;
-import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
-@Service
+@Service @Slf4j
 public class TeamServiceImpl implements TeamService {
 	
 	private final TeamRepository teamRepository;
@@ -27,7 +29,8 @@ public class TeamServiceImpl implements TeamService {
 	
 	@Override
 	public Team createTeam ( Team team ) {
-		if(team == null) throw new ArithmeticException ();
+		if(team == null) throw new ValidationException ();
+		Util.validateUserRoleAction (userRepository);
 		Team newTeam = new Team ();
 		newTeam.setName ( team.getName () );
 		User existingUser = userRepository.findByEmail(team.getSupervisor().getEmail ());

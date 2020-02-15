@@ -1,16 +1,17 @@
 package com.isoft.customersupport.ticket.comments;
 
-import com.isoft.customersupport.ticket.mail.TicketMailService;
 import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.exception.TicketNotFoundException;
 import com.isoft.customersupport.ticket.Ticket;
 import com.isoft.customersupport.ticket.TicketFlag;
 import com.isoft.customersupport.ticket.TicketRepository;
+import com.isoft.customersupport.ticket.mail.TicketMailService;
 import com.isoft.customersupport.usermngt.ActiveDirectory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class CommentServiceImpl implements CommentsService {
 	}
 	
 	@Override
-	public void createComment ( Comments comment, TicketFlag status, Integer ticketId ) {
+	public void createComment ( Comments comment, TicketFlag status, Integer ticketId ) throws MessagingException {
 		Comments newComment = new Comments ();
 		newComment.setCreatedBy ( Util.getCurrentUser () );
 		newComment.setCreatedOn ( LocalDateTime.now () );

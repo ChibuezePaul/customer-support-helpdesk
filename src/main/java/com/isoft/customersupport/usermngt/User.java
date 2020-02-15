@@ -1,14 +1,15 @@
 package com.isoft.customersupport.usermngt;
 
 import com.isoft.customersupport.AbstractEntity;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.envers.Audited;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Entity @Audited @Data

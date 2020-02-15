@@ -105,7 +105,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         message.setText(
               "<h2>A new ticket has been assigned to your team with the following details.</h3>" +
 					"<p>Ticket Type : %s</p>" +
-					"<p>Subject : %s</p>" +
+					"<p>Ticket Class : %s</p>" +
+					"<p>Ticket Title : %s</p>" +
 					"<p>Issue : %s</p>" +
 					"<p>Created By : %s</p>" +
 					"<p>Created On : %s</p>" +

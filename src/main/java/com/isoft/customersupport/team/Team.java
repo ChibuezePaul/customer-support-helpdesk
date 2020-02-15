@@ -3,11 +3,14 @@ package com.isoft.customersupport.team;
 import com.isoft.customersupport.AbstractEntity;
 import com.isoft.customersupport.usermngt.ActiveDirectory;
 import com.isoft.customersupport.usermngt.User;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.envers.Audited;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 

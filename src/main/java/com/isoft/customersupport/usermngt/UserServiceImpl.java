@@ -1,9 +1,10 @@
 package com.isoft.customersupport.usermngt;
 
-import com.isoft.customersupport.ticket.mail.TicketMailService;
 import com.isoft.customersupport.config.Util;
 import com.isoft.customersupport.exception.UserNotFoundException;
 import com.isoft.customersupport.exception.ValidationException;
+import com.isoft.customersupport.ticket.mail.TicketMailService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service @Slf4j
 public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
@@ -33,16 +34,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User createUser ( User userCmd ) {
 		if(userCmd==null) throw new ValidationException ();
+		Util.validateIsSuperUser (userRepository);
 		User newUser = new User ();
 		newUser.setEmail ( userCmd.getEmail () );
 		String tempPassword = Util.generatePassword ();
 		newUser.setPassword ( encoder.encode ( tempPassword ) );
-		newUser.setRole ( Roles.ADMIN );
-		ticketMailService.sendNewUserCreatedMessage ( "Supervisor Account Created", "Username : "+ newUser.getEmail () + "<br />Password : "+tempPassword , newUser.getEmail ()+"<br />Kindly visit the portal at http://localhost:"+appPort+" to change your password" );
+		ticketMailService.sendNewUserCreatedMessage ( "Supervisor Account Created", "Username : "+ newUser.getEmail () + "<br />Password : "+tempPassword +"<br />Kindly visit the portal at http://localhost:"+appPort+" to change your password", newUser.getEmail () );
 		return userRepository.save ( newUser );
 	}
-	
-	
 	
 	@Override
 	public User updateUser ( User userCmd ) {
@@ -51,6 +50,7 @@ public class UserServiceImpl implements UserService {
 		if( ! userCmd.getPassword ().equals ( user.getPassword () ) ) throw new ValidationException ();
 		user.setIsFirstLogin (false);
 		user.setPassword ( encoder.encode ( userCmd.getPassword () ) );
+		user.setRole ( Roles.ADMIN );
 		return userRepository.save ( user );
 	}
 	

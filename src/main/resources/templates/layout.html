@@ -25,9 +25,10 @@
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css' />
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/img/support.png}">
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 </head>
 <body>
     <div id="head" th:fragment="header">
@@ -49,6 +50,52 @@
             </div>
         </div>
     </div>
+
+    <section th:fragment="subHeader">
+        <div class="container">
+            <div class="row noti-div">
+                <div class="col-lg-4 col-md-4 col-sm-4  text-center">
+                    <a th:href="@{/open-tickets}" href="open-tickets.html">
+                        <div class="alert alert-success">
+                            <i class="fa fa-folder-open-o fa-4x"></i>
+                            <span class="label label-warning">Open Tickets</span>
+                            <span class="label label-success" th:text="${openTicketCount}">45</span>
+                            <p>
+                                New Open Tickets Which Are Not Replied Yet
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 text-center">
+                    <a th:href="@{/seen-tickets}">
+                        <div class="alert alert-info">
+                            <i class="fa fa-comments-o fa-4x"></i>
+
+                            <span class="label label-danger">New Reply</span>
+                            <span class="label label-info" th:text="${seenTicketCount}">145</span>
+                            <p>
+                                New Replies Of Your Open Tickets
+                            </p>
+
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4  text-center">
+                    <a th:href="@{/all-tickets}" href="ticket-history.html">
+                        <div class="alert alert-warning">
+                            <i class="fa fa-briefcase fa-4x"></i>
+                            <span class="label label-success">Total Tickets</span>
+                            <span class="label label-warning" th:text="${allTicketCount}">2065</span>
+                            <p>
+                                The Total Ticket Which You Send Till Date
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <div class="col-lg-3 col-md-3 col-sm-3" th:fragment="sidebar">
         <a th:href="@{/logout}" class=" label label-danger"><strong>LOGOUT</strong> </a>

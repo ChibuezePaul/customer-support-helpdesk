@@ -7,13 +7,13 @@ import com.isoft.customersupport.ticket.comments.Comments;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Audited @Entity @Data @EqualsAndHashCode(callSuper = true, exclude = "comments")
 public class Ticket extends AbstractEntity {
@@ -37,13 +37,10 @@ public class Ticket extends AbstractEntity {
 	private LocalDateTime updatedOn;
 	
 	@NotBlank
-	private String issue, ticketType, subject;
+	private String issue, subject, ticketTitle;
 	
 	@Enumerated(EnumType.STRING)
-	private TicketFlag ticketStatus;
-	
-  	@Enumerated(EnumType.STRING)
-	private TicketFlag priority;
+	private TicketFlag ticketStatus, priority, ticketType;
  
 	@ManyToOne
 	private Category ticketCategory;

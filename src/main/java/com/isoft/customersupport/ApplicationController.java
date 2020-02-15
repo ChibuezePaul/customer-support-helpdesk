@@ -27,16 +27,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @Controller @Slf4j
 public class ApplicationController {
 	
 	@Value("${ticket.type}")
-	public String [] ticketType;
+	public String [] ticketTypes;
 	
 	@Value("${ticket.status}")
 	public String [] ticketStatus;
+	
+	@Value("${ticket.priority}")
+	public String [] ticketPriorities;
 	
 	private final CustomerLocationService customerLocationService;
 	private final CategoryService categoryService;
@@ -118,12 +122,13 @@ public class ApplicationController {
 	@GetMapping("/single-ticket/{id}")
 	public String viewSingleTicket(@PathVariable Integer id, Model model ){
 		model.addAttribute ( "singleTicket", ticketService.setTicketAsSeen(id));
+		model.addAttribute ( "ticketPriorities", ticketPriorities);
 		model.addAttribute ( "newComment", new Comments () );
 		return "single-ticket";
 	}
 	
 	@PostMapping("/save-comment/{ticketId}")
-	public String addNewCommentToTicket(@ModelAttribute ("newComment") @Valid Comments cmd, BindingResult result, RedirectAttributes redirectAttributes, @PathVariable Integer ticketId, TicketFlag status){
+	public String addNewCommentToTicket(@ModelAttribute ("newComment") @Valid Comments cmd, BindingResult result, RedirectAttributes redirectAttributes, @PathVariable Integer ticketId, TicketFlag status) throws MessagingException {
 		if (result.hasErrors()) {
 			log.warn("Error occurred adding comment {}", result);
 			return "single-ticket";
@@ -237,9 +242,6 @@ public class ApplicationController {
 	}
 	
 	private void loadAllModelAttributes ( Model model ) {
-//		model.addAttribute ( "unseenTicketCount", 0 );
-//		model.addAttribute ( "openTicketCount", 0 );
-//		model.addAttribute ( "allTicketCount", 0 );
 		model.addAttribute ( "ticket", new Ticket () );
 		model.addAttribute ( "ticketCategory",new Category () );
 		model.addAttribute ( "team",new Team () );
@@ -251,7 +253,8 @@ public class ApplicationController {
 	}
 	
 	public void loadTicketAttributes ( Model model ) {
-		model.addAttribute ( "types", ticketType );
+		model.addAttribute ( "ticketTypes", ticketTypes );
+		model.addAttribute ( "ticketPriorities", ticketPriorities );
 		model.addAttribute ( "categories", categoryService.findAllCategory () );
 		model.addAttribute ( "locations", customerLocationService.findAllCustomerLocation () );
 	}

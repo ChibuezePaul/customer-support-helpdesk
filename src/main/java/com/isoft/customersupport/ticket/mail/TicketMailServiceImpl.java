@@ -82,7 +82,6 @@ public class TicketMailServiceImpl implements TicketMailService {
 			helper.setFrom(emailFrom);
 		}
 		helper.setValidateAddresses ( true );
-//		helper.setReplyTo ( "noreply@kemmtech.com" );
 		helper.setSubject(subject);
 		if(bc != null) helper.setBcc ( bc );
 		helper.setText(text,true);

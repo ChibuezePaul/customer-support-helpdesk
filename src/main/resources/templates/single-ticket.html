@@ -42,7 +42,7 @@
                                 th:text="${e.message}"></li>
                         </section>
                         <div class="form-group col-lg-8 col-md-8 col-sm-8">
-                            <label>Add Note</label>
+                            <label><span class="text-danger">*</span>Add Note</label>
                             <textarea class="form-control" rows="8" required autocomplete="off" th:field="*{details}"></textarea>
                         </div>
 
@@ -50,9 +50,7 @@
                             <label>Update Status</label>
                             <select class="form-control" name="status">
                                 <option value="">select status...</option>
-                                <option value="CLOSED">Closed</option>
-                                <option value="RESOLVED">Resolved</option>
-                                <option value="REJECTED">Rejected</option>
+                                <option th:each="ticketPriority : ${ticketPriorities}" th:text="${ticketPriority}" th:value="${ticketPriority.toUpperCase()}">Low</option>
                             </select>
                         </div>
 
